@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Quiz Builder</string>
+    <string name="title">Quiz Builder</string>
+    <string name="enterName">Please enter your name:</string>
+    <string name="start">Start Quiz</string>
+    <string name="score">Score:</string>
+    <string name="next">Next\nQuestion</string>
+    <string name="goodJob">Good Job</string>
+    <string name="retry">Retry</string>
+    <string name="backToMenu">Back to Menu</string>
+    <string name="answered">Answered:</string>
+    <string name="correct">Correct: </string>
+    <string name="remaining">Remaining:</string>
+    <string name="nothing"> </string>
+    <string name="option">Option</string>
+    <string name="placeholder">XX / XX</string>
+    <string name="questionBanner">Question: </string>
+    <string name="fillerQuestion">This is a fake question that is not a real question</string>
+    <string name="fillerQuizName">Cool Quiz Name</string>
+    <string name="newQuestion">New Question</string>
+    <string name="back">Back</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="selectQuiz">Select Quiz</string>
+    <string name="quizName">Quiz Name</string>
+    <string name="question">Question</string>
+    <string name="modifyQuizzes">Modify Quizzes</string>
+    <string name="answer">Answer</string>
+    <string name="secPerQuestion">Seconds Per Question</string>
+    <string name="quizProps">Quiz Properties</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="number">XX</string>
+
+
+</resources>
