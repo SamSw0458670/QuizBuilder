@@ -2,6 +2,8 @@ package com.example.a2quizbuilder;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -30,16 +32,7 @@ public class DBAdapter extends SQLiteOpenHelper {
     private static final String QUESTION_COL = "question";
     private static final String ANSWER_COL = "answer";
 
-    // below variable id for our course duration column.
-    private static final String DURATION_COL = "duration";
-
-    // below variable for our course description column.
-    private static final String DESCRIPTION_COL = "description";
-
-    // below variable is for our course tracks column.
-    private static final String TRACKS_COL = "tracks";
-
-    // creating a constructor for our database handler.
+    // creating a constructor for the database handler.
     public DBAdapter(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -84,6 +77,7 @@ public class DBAdapter extends SQLiteOpenHelper {
         db.close();
     }
 
+    // function that is used to add a new question to the question table
     public void addNewQuestion(String quizID, String question, String answer) {
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -98,6 +92,87 @@ public class DBAdapter extends SQLiteOpenHelper {
         db.insert(TABLE_QUESTION_NAME, null, values);
 
         db.close();
+    }
+
+    //function that returns a Cursor that has all the quizzes
+    public Cursor getAllQuizzes(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor allQuizzes = db.query(TABLE_QUIZ_NAME, new String[]
+                {QUIZ_NAME_COL, QUIZ_SECONDS_PER_QUESTION_COL},
+                null, null, null, null, QUIZ_NAME_COL);
+        db.close();
+        return allQuizzes;
+    }
+
+    //function that returns a cursor with a specific quiz based on the quizId
+    public Cursor getSingleQuiz(long quizId) throws SQLException {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor quiz = db.query(true, TABLE_QUIZ_NAME, new String[]
+                {QUIZ_NAME_COL, QUIZ_SECONDS_PER_QUESTION_COL}, ID_COL + "=" + quizId,
+                null, null, null, null, null);
+        if(quiz != null){
+            quiz.moveToFirst();
+        }
+        db.close();
+        return quiz;
+    }
+
+    //function that deletes a quiz and all its associated questions
+    public boolean deleteQuiz(long quizId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        boolean successQuiz;
+        boolean successQuestions = db.delete(TABLE_QUESTION_NAME,
+                QUIZ_ID_COL + "=" + quizId, null) >0;
+
+        if(successQuestions){
+            successQuiz = db.delete(TABLE_QUIZ_NAME,
+                    ID_COL + "=" + quizId, null) >0;
+            db.close();
+        } else {
+            db.close();
+            return false;
+        }
+
+        return successQuiz;
+    }
+
+    //function that returns a Cursor with all the questions from a specific quiz using the quizId
+    public Cursor getAllQuestions(long quizId){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor allQuestions = db.query(TABLE_QUESTION_NAME, new String[]
+                        {ID_COL, QUESTION_COL, ANSWER_COL},
+                QUIZ_ID_COL, new String[] {String.valueOf(quizId)},
+                null, null, null);
+        db.close();
+        return allQuestions;
+    }
+
+    //function that returns a Cursor with a specific question based on the question id
+    public Cursor getSingleQuestion(long questionId) throws SQLException {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor question = db.query(true, TABLE_QUIZ_NAME, new String[]
+                        {ID_COL, QUESTION_COL, ANSWER_COL}, ID_COL + "=" + questionId,
+                null, null, null, null, null);
+        if(question != null){
+            question.moveToFirst();
+        }
+        db.close();
+        return question;
+    }
+
+    //function to delete a specific question
+    public boolean deleteQuestion(long questionId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        boolean success = db.delete(TABLE_QUESTION_NAME,
+                ID_COL + "=" + questionId, null) >0;
+        db.close();
+
+        return success;
     }
 
 
