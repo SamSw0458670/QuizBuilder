@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,7 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
-public class QuestionActivity extends AppCompatActivity {
+public class QuestionActivityWObjects extends AppCompatActivity {
 
     //initialize class variables
     final int btnOne = 1, btnTwo = 2, btnThree = 3, btnFour = 4;
@@ -108,7 +107,7 @@ public class QuestionActivity extends AppCompatActivity {
     //function to get data from bundle
     public void notFirstRun(){
 
-        questionsO = intent.getParcelableArrayListExtra("QOs");
+        questionsO = (ArrayList<Question>) intent.getSerializableExtra("QOs");
         currentQuestion = intent.getIntExtra("currQ", 0);
         correct = intent.getIntExtra("correct", 0);
         setNumQuestions();
@@ -230,7 +229,7 @@ public class QuestionActivity extends AppCompatActivity {
 
     //function to fill question fraction
     public void populateQuestionProgress(){
-        String progress =" " + (currentQuestion + 1) + " / "
+        String progress =" " + currentQuestion + " / "
                 + numQuestions;
         qProgress.setText(progress);
     }//end of populateQuestionProgress
@@ -341,7 +340,7 @@ public class QuestionActivity extends AppCompatActivity {
     public void nextQuestion(){
 
         //go to end screen if on last question
-        if((currentQuestion + 1) == numQuestions){
+        if(currentQuestion == numQuestions){
             Intent i = new Intent(getApplicationContext(), EndActivity.class);
             Bundle finals = new Bundle();
             finals.putInt("correct", correct);
@@ -352,12 +351,11 @@ public class QuestionActivity extends AppCompatActivity {
         //if not last question, go to next question
         else {
             currentQuestion++;
-            Intent i = new Intent(getApplicationContext(), QuestionActivity.class);
+            Intent i = new Intent(getApplicationContext(), QuestionActivityWObjects.class);
             Bundle extras = new Bundle();
             extras.putInt("correct", correct);
             extras.putInt("currQ", currentQuestion);
-            //extras.putSerializable("QOs", questionsO);
-            extras.putParcelableArrayList("QOs", questionsO);
+            extras.putSerializable("QOs", questionsO);
             i.putExtras(extras);
             startActivity(i);
         }
