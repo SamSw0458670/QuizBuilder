@@ -32,6 +32,8 @@
     <string name="plus">+</string>
     <string name="minus">-</string>
     <string name="number">XX</string>
+    <string name="newQuiz">New Quiz</string>
+    <string name="questionNumber">Question #</string>
 
 
 </resources>
