@@ -1,6 +1,8 @@
 package com.example.a2quizbuilder;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,23 +16,37 @@ import java.util.List;
 public class ViewQuestionsActivity extends AppCompatActivity {
 
     DBAdapter db;
+    Intent quizIntent;
+    Bundle quizInfo;
 
     Button backBtn, newQuestionBtn, quizPropsBtn;
 
     List<Question> questionList = new ArrayList<>();
+    private RecyclerView recyclerView;
+
+    private RecyclerView.Adapter recyclerAdapter;
+
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_questions);
 
-        backBtn.findViewById(R.id.VQuestionBackBtn);
-        newQuestionBtn.findViewById(R.id.VQuestionNewQuestionBtn);
-        quizPropsBtn.findViewById(R.id.VQuestionsQuizPropertiesBtn);
+        quizIntent = getIntent();
+        quizInfo = quizIntent.getExtras();
+
+        backBtn = findViewById(R.id.VQuestionBackBtn);
+        newQuestionBtn = findViewById(R.id.VQuestionNewQuestionBtn);
+        quizPropsBtn = findViewById(R.id.VQuestionsQuizPropertiesBtn);
+        recyclerView = findViewById(R.id.VQuestionsRecyclerView);
+
 
         backBtn.setOnClickListener(onBackClicked);
         newQuestionBtn.setOnClickListener(onNewClicked);
         quizPropsBtn.setOnClickListener(onQuizPropsClicked);
+
+        displayQuestions();
 
     }
 
@@ -54,6 +70,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(ViewQuestionsActivity.this, ModifyQuizActivity.class);
+            intent.putExtras(quizInfo);
             startActivity(intent);
         }
     };
@@ -64,13 +81,20 @@ public class ViewQuestionsActivity extends AppCompatActivity {
         Cursor c = db.getAllQuestions(quizId);
         if(c.moveToFirst()){
             do{
-                Question question = new Question(c.getString(1), c.getString(2));
+                Question question = new Question(c.getString(0), c.getString(1), c.getString(2));
                 questionList.add(question);
             }while(c.moveToNext());
         }
     }
 
     public void displayQuestions(){
-        //TODO
+        //TODO - Populate question list
+        for(int i = 0; i < 5; i++){
+            questionList.add(new Question("1","Question", "answer"));
+        }
+        recyclerAdapter = new QuestionRVAdapter(this, questionList);
+
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }

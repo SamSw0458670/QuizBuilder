@@ -132,7 +132,7 @@ public class QuestionActivityWObjects extends AppCompatActivity {
             //read in file and split using delimiter
             while ((str = br.readLine()) != null){
                 String[] QA = str.split("#");
-                questionsO.add(new Question(QA[0], QA[1]));
+                questionsO.add(new Question("1", QA[0], QA[1]));
                 setNumQuestions();
             }
             is.close();

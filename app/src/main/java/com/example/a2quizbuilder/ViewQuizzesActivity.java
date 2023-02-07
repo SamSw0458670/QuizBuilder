@@ -1,6 +1,7 @@
 package com.example.a2quizbuilder;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -36,9 +37,12 @@ public class ViewQuizzesActivity extends AppCompatActivity {
 
         backBtn = findViewById(R.id.VQuizBackBtn);
         newQuizBtn = findViewById(R.id.VQuizNewQuizBtn);
+        recyclerView = findViewById(R.id.VQuizRecyclerView);
 
         backBtn.setOnClickListener(onBackClicked);
         newQuizBtn.setOnClickListener(onNewClicked);
+
+        displayQuizzes();
 
     }
 
@@ -62,13 +66,20 @@ public class ViewQuizzesActivity extends AppCompatActivity {
         Cursor c = db.getAllQuizzes();
         if(c.moveToFirst()){
             do{
-                Quiz quiz = new Quiz(c.getString(0), c.getString(1));
+                Quiz quiz = new Quiz(c.getString(0),c.getString(1), c.getString(2));
                 quizList.add(quiz);
             }while(c.moveToNext());
         }
     }
 
     public void displayQuizzes(){
-        //TODO
+        //TODO - Populate quiz list
+        for(int i = 0; i < 5; i++){
+            quizList.add(new Quiz("1", "Quiz", "10"));
+        }
+        recyclerAdapter = new QuizRVAdapter(this, quizList);
+
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }

@@ -34,6 +34,7 @@
     <string name="number">XX</string>
     <string name="newQuiz">New Quiz</string>
     <string name="questionNumber">Question #</string>
+    <string name="viewQuizzes">View Quizzes</string>
 
 
 </resources>

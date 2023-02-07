@@ -4,12 +4,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Question implements Parcelable {
+    private String id;
     private String question;
     private String answer;
 
-    public Question(String pQuestion, String pAnswer){
+    public Question(String pId, String pQuestion, String pAnswer){
+        this.id = pId;
         this.question = pQuestion;
         this.answer = pAnswer;
+    }
+
+    public String getID(){
+        return this.id;
     }
 
     public String getQuestion(){

@@ -99,7 +99,7 @@ public class DBAdapter extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor allQuizzes = db.query(TABLE_QUIZ_NAME, new String[]
-                {QUIZ_NAME_COL, QUIZ_SECONDS_PER_QUESTION_COL},
+                {ID_COL, QUIZ_NAME_COL, QUIZ_SECONDS_PER_QUESTION_COL},
                 null, null, null, null, QUIZ_NAME_COL);
         db.close();
         return allQuizzes;
@@ -138,6 +138,16 @@ public class DBAdapter extends SQLiteOpenHelper {
         return successQuiz;
     }
 
+    public boolean updateQuiz(long quizId, String quizName, String seconds){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cval = new ContentValues();
+        cval.put(QUIZ_NAME_COL, quizName);
+        cval.put(QUIZ_SECONDS_PER_QUESTION_COL, seconds);
+        boolean result = db.update(TABLE_QUIZ_NAME, cval, ID_COL + "=" + quizId, null) > 0;
+        db.close();
+        return result;
+    }
+
     //function that returns a Cursor with all the questions from a specific quiz using the quizId
     public Cursor getAllQuestions(long quizId){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -173,6 +183,17 @@ public class DBAdapter extends SQLiteOpenHelper {
         db.close();
 
         return success;
+    }
+
+    public boolean updateQuestion(long questionId, String question, String answer){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cval = new ContentValues();
+        cval.put(QUESTION_COL, question);
+        cval.put(ANSWER_COL, answer);
+        boolean result = db.update(TABLE_QUESTION_NAME, cval,
+                ID_COL + "=" + questionId, null) > 0;
+        db.close();
+        return result;
     }
 
 
