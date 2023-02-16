@@ -26,6 +26,8 @@ public class ModifyQuizActivity extends AppCompatActivity {
     String quizId, quizName, quizSeconds;
     String defaultId = "-1", defaultQuizName = "Enter Quiz Name", defaultSeconds = "10";
 
+    boolean editing = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +59,7 @@ public class ModifyQuizActivity extends AppCompatActivity {
     public View.OnClickListener onBackClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            goToViewQuizzes();
+            goToPreviousView();
         }
     };
 
@@ -93,18 +95,26 @@ public class ModifyQuizActivity extends AppCompatActivity {
         getQuizInfo();
         quizNameET.setText(quizName);
         numSecondsTV.setText(quizSeconds);
+        checkEditing();
     }
 
     private void getQuizInfo(){
-        quizId = quizIntent.getStringExtra("id");
+        quizId = quizIntent.getStringExtra("quizId");
         if(quizId != null){
-           quizName = quizIntent.getStringExtra("name");
+           quizName = quizIntent.getStringExtra("quizName");
            quizSeconds = quizIntent.getStringExtra("seconds");
         }
         else{
             quizId = defaultId;
             quizName = defaultQuizName;
             quizSeconds = defaultSeconds;
+        }
+    }
+
+    private void checkEditing(){
+        editing = quizIntent.getBooleanExtra("editing", true);
+        if(!editing){
+            deleteBtn.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -125,13 +135,12 @@ public class ModifyQuizActivity extends AppCompatActivity {
         quizName = quizNameET.getText().toString();
         quizSeconds = numSecondsTV.getText().toString();
 
-        if(!Objects.equals(quizId, defaultId)){
+        if(editing){
             updateQuiz();
         }
         else{
             createQuiz();
         }
-        goToViewQuizzes();
     }
 
     private void updateQuiz(){
@@ -143,12 +152,14 @@ public class ModifyQuizActivity extends AppCompatActivity {
             Toast.makeText(ModifyQuizActivity.this,
                     "Something Went Wrong",Toast.LENGTH_LONG).show();
         }
+        goToViewQuestions();
     }
 
     private void createQuiz(){
         db.addNewQuiz(quizName, quizSeconds);
         Toast.makeText(ModifyQuizActivity.this,
                 "Question Added",Toast.LENGTH_LONG).show();
+        goToViewQuizzes();
     }
 
     private void deleteQuiz() {
@@ -162,9 +173,23 @@ public class ModifyQuizActivity extends AppCompatActivity {
         goToViewQuizzes();
     }
 
-    private void goToViewQuizzes(){
+    private void goToPreviousView(){
+        if(editing){
+            goToViewQuestions();
+        }
+        else{
+            goToViewQuizzes();
+        }
+    }
+
+    private void goToViewQuestions(){
         Intent intent = new Intent(ModifyQuizActivity.this, ViewQuestionsActivity.class);
-        //intent.putExtras(quizInfo);
+        intent.putExtras(quizInfo);
+        startActivity(intent);
+    }
+
+    private void goToViewQuizzes(){
+        Intent intent = new Intent(ModifyQuizActivity.this, ViewQuizzesActivity.class);
         startActivity(intent);
     }
 }

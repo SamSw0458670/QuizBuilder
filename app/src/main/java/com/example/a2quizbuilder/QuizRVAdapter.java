@@ -61,8 +61,8 @@ public class QuizRVAdapter extends RecyclerView.Adapter<QuizRVAdapter.MyViewHold
             public void onClick(View v) {
                 Intent intent = new Intent(context, ViewQuestionsActivity.class);
                 Bundle quizInfo = new Bundle();
-                quizInfo.putString("id", currentQuiz.getID());
-                quizInfo.putString("name", currentQuiz.getName());
+                quizInfo.putString("quizId", currentQuiz.getID());
+                quizInfo.putString("quizName", currentQuiz.getName());
                 quizInfo.putString("seconds", currentQuiz.getSeconds());
                 intent.putExtras(quizInfo);
                 context.startActivity(intent);

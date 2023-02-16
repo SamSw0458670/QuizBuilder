@@ -15,27 +15,33 @@
             android:layout_height="match_parent"
             android:background="@color/yellow">
 
-            <Button
-                style="?android:attr/buttonBarButtonStyle"
-                android:id="@+id/VQuestionBackBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
-                android:layout_marginStart="6dp"
-                android:backgroundTint="@color/dark_blue"
-                android:text="@string/back"
-                android:textColor="@color/white"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-            <Button
-                style="?android:attr/buttonBarButtonStyle"
-                android:id="@+id/VQuestionNewQuestionBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
-                android:layout_marginStart="6dp"
-                android:backgroundTint="@color/dark_blue"
-                android:text="@string/newQuestion"
-                android:textColor="@color/white"/>
+                <Button
+                    android:id="@+id/VQuestionBackBtn"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_marginStart="6dp"
+                    android:backgroundTint="@color/dark_blue"
+                    android:text="@string/back"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/VQuestionNewQuestionBtn"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_marginStart="6dp"
+                    android:backgroundTint="@color/dark_blue"
+                    android:text="@string/newQuestion"
+                    android:textColor="@color/white" />
+            </LinearLayout>
 
         </TableRow>
 

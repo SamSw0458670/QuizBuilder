@@ -22,6 +22,8 @@ public class ModifyQuestionActivity extends AppCompatActivity {
 
     EditText questionET, answerET;
 
+    boolean editing = true;
+
     String question, answer, questionId, quizId;
     String defaultQuestion = "Enter Question", defaultAnswer = "Enter Answer", defaultId = "-1";
 
@@ -77,9 +79,11 @@ public class ModifyQuestionActivity extends AppCompatActivity {
     }
 
     private void getQuestionInfo() {
+        editing = questionIntent.getBooleanExtra("editing", true);
         quizId = questionIntent.getStringExtra("quizId");
-        questionId = questionIntent.getStringExtra("id");
-        if(questionId != null){
+
+        if(editing){
+            questionId = questionIntent.getStringExtra("id");
             question = questionIntent.getStringExtra("question");
             answer = questionIntent.getStringExtra("answer");
         }
@@ -133,7 +137,10 @@ public class ModifyQuestionActivity extends AppCompatActivity {
 
     private void goToViewQuestions(){
         Intent intent = new Intent(ModifyQuestionActivity.this, ViewQuestionsActivity.class);
-        //intent.putExtras(questionInfo);
+        if(editing){
+            intent.putExtras(questionInfo);
+        }
+
         startActivity(intent);
     }
 

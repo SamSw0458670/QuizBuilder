@@ -20,9 +20,12 @@ public class QuestionRVAdapter extends RecyclerView.Adapter<QuestionRVAdapter.My
     Question currQuestion;
     Context context;
 
-    public QuestionRVAdapter(Context pC, List<Question> pQuestions){
+    long quizId;
+
+    public QuestionRVAdapter(Context pC, List<Question> pQuestions, long pQuizId){
         this.questions = pQuestions;
         this.context = pC;
+        this.quizId = pQuizId;
     }
 
     @NonNull
@@ -61,6 +64,7 @@ public class QuestionRVAdapter extends RecyclerView.Adapter<QuestionRVAdapter.My
             public void onClick(View v) {
                 Intent intent = new Intent(context, ModifyQuestionActivity.class);
                 Bundle questionInfo = new Bundle();
+                questionInfo.putString("quizId", String.valueOf(quizId));
                 questionInfo.putString("id", currQuestion.getID());
                 questionInfo.putString("question", currQuestion.getQuestion());
                 questionInfo.putString("answer", currQuestion.getAnswer());

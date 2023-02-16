@@ -50,6 +50,7 @@ public class ViewQuizzesActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(ViewQuizzesActivity.this, MainActivity.class);
+
             startActivity(intent);
         }
     };
@@ -58,6 +59,9 @@ public class ViewQuizzesActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(ViewQuizzesActivity.this, ModifyQuizActivity.class);
+            Bundle mode = new Bundle();
+            mode.putBoolean("editing", false);
+            intent.putExtras(mode);
             startActivity(intent);
         }
     };
@@ -75,7 +79,7 @@ public class ViewQuizzesActivity extends AppCompatActivity {
     public void displayQuizzes(){
         //TODO - Populate quiz list
         for(int i = 0; i < 5; i++){
-            quizList.add(new Quiz("1", "Quiz", "10"));
+            quizList.add(new Quiz("1", "Quiz", "9"));
         }
         recyclerAdapter = new QuizRVAdapter(this, quizList);
 

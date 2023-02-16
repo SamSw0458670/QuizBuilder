@@ -19,6 +19,8 @@ public class ViewQuestionsActivity extends AppCompatActivity {
     Intent quizIntent;
     Bundle quizInfo;
 
+    long quizId = 0;
+
     Button backBtn, newQuestionBtn, quizPropsBtn;
 
     List<Question> questionList = new ArrayList<>();
@@ -62,6 +64,10 @@ public class ViewQuestionsActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(ViewQuestionsActivity.this, ModifyQuestionActivity.class);
+            Bundle newQuestion = new Bundle();
+            newQuestion.putBoolean("editing", false);
+            newQuestion.putString("quizId", String.valueOf(quizId));
+            intent.putExtras(newQuestion);
             startActivity(intent);
         }
     };
@@ -75,9 +81,12 @@ public class ViewQuestionsActivity extends AppCompatActivity {
         }
     };
 
+    public void fillQuizId(){
+        quizId = Long.parseLong(quizInfo.getString("quizId"));
+    }
+
     public void loadQuestions(){
         //TODO: get quiz id
-        long quizId = 0;
         Cursor c = db.getAllQuestions(quizId);
         if(c.moveToFirst()){
             do{
@@ -92,7 +101,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
         for(int i = 0; i < 5; i++){
             questionList.add(new Question("1","Question", "answer"));
         }
-        recyclerAdapter = new QuestionRVAdapter(this, questionList);
+        recyclerAdapter = new QuestionRVAdapter(this, questionList, quizId);
 
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
