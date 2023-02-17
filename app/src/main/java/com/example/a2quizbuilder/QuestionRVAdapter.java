@@ -40,6 +40,7 @@ public class QuestionRVAdapter extends RecyclerView.Adapter<QuestionRVAdapter.My
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         currQuestion = questions.get(position);
         holder.questionTV.setText(currQuestion.getQuestion());
+        holder.questionNumTV.setText(currQuestion.getID());
     }
 
     @Override
@@ -49,14 +50,17 @@ public class QuestionRVAdapter extends RecyclerView.Adapter<QuestionRVAdapter.My
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView questionTV;
+        TextView questionTV, questionNumTV;
         CardView questionCV;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             questionTV = itemView.findViewById(R.id.questionRowQuestion);
             questionCV = itemView.findViewById(R.id.questionRowCardView);
+            questionNumTV = itemView.findViewById(R.id.questionRowQuestionNum);
 
             questionCV.setOnClickListener(onCardClicked);
+
+
         }
 
         public View.OnClickListener onCardClicked = new View.OnClickListener() {

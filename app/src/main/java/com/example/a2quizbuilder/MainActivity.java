@@ -4,8 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,8 +30,35 @@ public class MainActivity extends AppCompatActivity {
         startBtn.setOnClickListener(onStartClicked);
         viewQuizzesBtn.setOnClickListener(onViewQuizzesClicked);
 
+        try{
+            //String destPath = "/data/data/" + getPackageName() +"/database/MyDB";
+            String destPath = Environment.getExternalStorageDirectory().getPath() +
+                    getPackageName() + "/database/QuizDB";
+            File f = new File(destPath);
+            if(!f.exists()){
+                CopyDB(getBaseContext().getAssets().open("quizdb"),
+                        new FileOutputStream(destPath));
+            }
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
 
 
+
+    }
+
+    public void CopyDB(InputStream inputStream, OutputStream outputStream)
+            throws IOException {
+        //copy 1k bytes at a time
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) > 0) {
+            outputStream.write(buffer, 0, length);
+        }
+        inputStream.close();
+        outputStream.close();
     }
 
     public View.OnClickListener onStartClicked = new View.OnClickListener(){

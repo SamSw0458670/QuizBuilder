@@ -144,32 +144,45 @@ public class ModifyQuizActivity extends AppCompatActivity {
     }
 
     private void updateQuiz(){
+        db.open();
         if(db.updateQuiz(Long.parseLong(quizId), quizName, quizSeconds)){
             Toast.makeText(ModifyQuizActivity.this,
                     "Quiz Updated",Toast.LENGTH_LONG).show();
         }
         else{
             Toast.makeText(ModifyQuizActivity.this,
-                    "Something Went Wrong",Toast.LENGTH_LONG).show();
+                    "Error updating quiz, please try again",Toast.LENGTH_LONG).show();
         }
+        db.close();
         goToViewQuestions();
     }
 
     private void createQuiz(){
-        db.addNewQuiz(quizName, quizSeconds);
-        Toast.makeText(ModifyQuizActivity.this,
-                "Question Added",Toast.LENGTH_LONG).show();
+        try{
+            db.open();
+            long id = db.addNewQuiz(quizName, quizSeconds);
+            db.close();
+            Toast.makeText(ModifyQuizActivity.this,
+                    "Quiz Added",Toast.LENGTH_LONG).show();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            Toast.makeText(ModifyQuizActivity.this,
+                    "Error adding quiz, please try again",Toast.LENGTH_LONG).show();
+        };
         goToViewQuizzes();
     }
 
     private void deleteQuiz() {
+        db.open();
         if (db.deleteQuiz(Long.parseLong(quizId))) {
             Toast.makeText(ModifyQuizActivity.this,
                     "Quiz Deleted", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(ModifyQuizActivity.this,
-                    "Something Went Wrong", Toast.LENGTH_LONG).show();
+                    "Error deleting quiz, please try again", Toast.LENGTH_LONG).show();
         }
+        db.close();
         goToViewQuizzes();
     }
 

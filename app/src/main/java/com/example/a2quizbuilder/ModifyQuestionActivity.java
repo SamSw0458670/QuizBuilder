@@ -104,10 +104,11 @@ public class ModifyQuestionActivity extends AppCompatActivity {
         else {
             createQuestion();
         }
-        goToViewQuestions();
+
     }
 
     private void updateQuestion(){
+        db.open();
         if(db.updateQuestion(Long.parseLong(questionId), question, answer)){
             Toast.makeText(ModifyQuestionActivity.this,
                     "Question Updated",Toast.LENGTH_LONG).show();
@@ -116,30 +117,44 @@ public class ModifyQuestionActivity extends AppCompatActivity {
             Toast.makeText(ModifyQuestionActivity.this,
                     "Something Went Wrong",Toast.LENGTH_LONG).show();
         }
+        db.close();
+        goToViewQuestions();
     }
 
     private void createQuestion(){
-        db.addNewQuestion(quizId, question, answer);
-        Toast.makeText(ModifyQuestionActivity.this,
-                "Question Created", Toast.LENGTH_LONG).show();
+
+        try {
+            db.open();
+            long id = db.addNewQuestion(quizId, question, answer);
+            db.close();
+            Toast.makeText(ModifyQuestionActivity.this,
+                    "Question Created", Toast.LENGTH_LONG).show();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            Toast.makeText(ModifyQuestionActivity.this,
+                    "Error creating question, please try again", Toast.LENGTH_LONG).show();
+        }
+        goToViewQuestions();
     }
 
     private void deleteQuestion(){
+        db.open();
         if(db.deleteQuestion(Long.parseLong(questionId))){
             Toast.makeText(ModifyQuestionActivity.this,
                     "Question Deleted", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(ModifyQuestionActivity.this,
-                    "Something Went Wrong", Toast.LENGTH_LONG).show();
+                    "Error deleting question, please try again", Toast.LENGTH_LONG).show();
         }
+        db.close();
         goToViewQuestions();
     }
 
     private void goToViewQuestions(){
         Intent intent = new Intent(ModifyQuestionActivity.this, ViewQuestionsActivity.class);
-        if(editing){
-            intent.putExtras(questionInfo);
-        }
+        intent.putExtras(questionInfo);
+
 
         startActivity(intent);
     }

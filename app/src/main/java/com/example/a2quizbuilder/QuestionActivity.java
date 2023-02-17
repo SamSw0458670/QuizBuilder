@@ -4,36 +4,32 @@ import static android.view.View.VISIBLE;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Random;
 
 public class QuestionActivity extends AppCompatActivity {
 
     //initialize class variables
     final int btnOne = 1, btnTwo = 2, btnThree = 3, btnFour = 4;
-    int correct = 0, currentQuestion = 0, numQuestions;
+    int correct = 0, currentQuestion = 0, numQuestions, quizId;
     Intent intent;
-    Bundle extras;
+    Bundle quizInfo;
 
     Button optOneBtn, optTwoBtn, optThreeBtn, optFourBtn, nextBtn;
     ArrayList<String> options = new ArrayList<>();
     ArrayList<Question> questionsO = new ArrayList<>();
+
+    DBAdapter db;
 
 
     TextView questionTextView, qProgress, corNum;
@@ -44,7 +40,7 @@ public class QuestionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
         intent = getIntent();
-        extras = intent.getExtras();
+        quizInfo = intent.getExtras();
 
         //assign ids
         optOneBtn = findViewById(R.id.optionOneBtn);
@@ -97,55 +93,41 @@ public class QuestionActivity extends AppCompatActivity {
 
     //function to determine if its the first question or not
     public void runSetup(){
-        if(extras != null){
-            notFirstRun();
+        quizId = intent.getIntExtra("quizId", 1);
+        currentQuestion = intent.getIntExtra("currQ", 0);
+        if(currentQuestion > 0){
+            getQuestions();
         }
         else{
-            firstRunSetup();
+            populateQuestions();
         }
     }//end runSetup
 
     //function to get data from bundle
-    public void notFirstRun(){
+    public void getQuestions(){
 
         questionsO = intent.getParcelableArrayListExtra("QOs");
-        currentQuestion = intent.getIntExtra("currQ", 0);
         correct = intent.getIntExtra("correct", 0);
         setNumQuestions();
-
     }//end of notFirstRun
 
     //function to get ArrayList and hashmap data, and shuffle the questions
-    public void firstRunSetup(){
+    public void populateQuestions(){
         populateQAndA();
         shuffleQuestions();
     }//end firstRunSetup
 
     //function to fill the questions and answers array list
     public void populateQAndA(){
-        String str = null;
-        BufferedReader br = null;
-        try{
-
-            InputStream is = getResources().openRawResource(R.raw.quizdata);
-            br = new BufferedReader(new InputStreamReader(is));
-
-            //read in file and split using delimiter
-            while ((str = br.readLine()) != null){
-                String[] QA = str.split("#");
-                questionsO.add(new Question("1", QA[0], QA[1]));
-                setNumQuestions();
-            }
-            is.close();
+        db.open();
+        Cursor c = db.getAllQuestions(quizId);
+        if(c.moveToFirst()){
+            do{
+                Question question = new Question(c.getString(0), c.getString(1), c.getString(2));
+                questionsO.add(question);
+            }while(c.moveToNext());
         }
-        catch(IOException e) {
-            e.printStackTrace();
-            Log.e("QuestionActivity", "Error with opening input file");
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-            Log.e("QuestionActivity", "Something went wrong");
-        }
+        db.close();
     }//end of populateQAndA
 
     public void setNumQuestions(){
@@ -169,7 +151,7 @@ public class QuestionActivity extends AppCompatActivity {
 
         //create randomizer
         Random r = new Random();
-        int limit = questionsO.size();
+        int limit = questionsO.size() - 1;
 
         //create options
         String optOne = questionsO.get(currentQuestion).getAnswer();

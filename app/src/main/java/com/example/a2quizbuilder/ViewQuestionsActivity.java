@@ -19,7 +19,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
     Intent quizIntent;
     Bundle quizInfo;
 
-    long quizId = 0;
+    long quizId;
 
     Button backBtn, newQuestionBtn, quizPropsBtn;
 
@@ -48,6 +48,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
         newQuestionBtn.setOnClickListener(onNewClicked);
         quizPropsBtn.setOnClickListener(onQuizPropsClicked);
 
+        db = new DBAdapter(this);
         displayQuestions();
 
     }
@@ -86,7 +87,8 @@ public class ViewQuestionsActivity extends AppCompatActivity {
     }
 
     public void loadQuestions(){
-        //TODO: get quiz id
+        fillQuizId();
+        db.open();
         Cursor c = db.getAllQuestions(quizId);
         if(c.moveToFirst()){
             do{
@@ -94,13 +96,11 @@ public class ViewQuestionsActivity extends AppCompatActivity {
                 questionList.add(question);
             }while(c.moveToNext());
         }
+        db.close();
     }
 
     public void displayQuestions(){
-        //TODO - Populate question list
-        for(int i = 0; i < 5; i++){
-            questionList.add(new Question("1","Question", "answer"));
-        }
+        loadQuestions();
         recyclerAdapter = new QuestionRVAdapter(this, questionList, quizId);
 
         recyclerView.setAdapter(recyclerAdapter);

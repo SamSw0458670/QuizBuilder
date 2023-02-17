@@ -42,6 +42,7 @@ public class ViewQuizzesActivity extends AppCompatActivity {
         backBtn.setOnClickListener(onBackClicked);
         newQuizBtn.setOnClickListener(onNewClicked);
 
+        db = new DBAdapter(this);
         displayQuizzes();
 
     }
@@ -67,6 +68,7 @@ public class ViewQuizzesActivity extends AppCompatActivity {
     };
 
     public void loadQuizzes(){
+        db.open();
         Cursor c = db.getAllQuizzes();
         if(c.moveToFirst()){
             do{
@@ -74,13 +76,11 @@ public class ViewQuizzesActivity extends AppCompatActivity {
                 quizList.add(quiz);
             }while(c.moveToNext());
         }
+        db.close();
     }
 
     public void displayQuizzes(){
-        //TODO - Populate quiz list
-        for(int i = 0; i < 5; i++){
-            quizList.add(new Quiz("1", "Quiz", "9"));
-        }
+        loadQuizzes();
         recyclerAdapter = new QuizRVAdapter(this, quizList);
 
         recyclerView.setAdapter(recyclerAdapter);
