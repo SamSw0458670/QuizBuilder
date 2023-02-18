@@ -17,10 +17,11 @@ import java.util.List;
 public class QuestionRVAdapter extends RecyclerView.Adapter<QuestionRVAdapter.MyViewHolder> {
 
     List<Question> questions;
-    Question currQuestion;
+
     Context context;
 
     long quizId;
+    int questionCount = 1;
 
     public QuestionRVAdapter(Context pC, List<Question> pQuestions, long pQuizId){
         this.questions = pQuestions;
@@ -38,9 +39,10 @@ public class QuestionRVAdapter extends RecyclerView.Adapter<QuestionRVAdapter.My
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        currQuestion = questions.get(position);
-        holder.questionTV.setText(currQuestion.getQuestion());
-        holder.questionNumTV.setText(currQuestion.getID());
+        holder.currQuestion = questions.get(position);
+        holder.questionTV.setText(holder.currQuestion.getQuestion());
+        holder.questionNumTV.setText(String.valueOf(questionCount));
+        questionCount++;
     }
 
     @Override
@@ -52,29 +54,29 @@ public class QuestionRVAdapter extends RecyclerView.Adapter<QuestionRVAdapter.My
 
         TextView questionTV, questionNumTV;
         CardView questionCV;
+
+        Question currQuestion;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             questionTV = itemView.findViewById(R.id.questionRowQuestion);
             questionCV = itemView.findViewById(R.id.questionRowCardView);
             questionNumTV = itemView.findViewById(R.id.questionRowQuestionNum);
 
-            questionCV.setOnClickListener(onCardClicked);
+            questionCV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, ModifyQuestionActivity.class);
+                    Bundle questionInfo = new Bundle();
+                    questionInfo.putString("quizId", String.valueOf(quizId));
+                    questionInfo.putString("id", currQuestion.getID());
+                    questionInfo.putString("question", currQuestion.getQuestion());
+                    questionInfo.putString("answer", currQuestion.getAnswer());
+                    intent.putExtras(questionInfo);
+                    context.startActivity(intent);
+                }
+            });
 
 
         }
-
-        public View.OnClickListener onCardClicked = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ModifyQuestionActivity.class);
-                Bundle questionInfo = new Bundle();
-                questionInfo.putString("quizId", String.valueOf(quizId));
-                questionInfo.putString("id", currQuestion.getID());
-                questionInfo.putString("question", currQuestion.getQuestion());
-                questionInfo.putString("answer", currQuestion.getAnswer());
-                intent.putExtras(questionInfo);
-                context.startActivity(intent);
-            }
-        };
     }
 }

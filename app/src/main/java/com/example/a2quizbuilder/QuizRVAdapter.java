@@ -17,7 +17,7 @@ import java.util.List;
 public class QuizRVAdapter extends RecyclerView.Adapter<QuizRVAdapter.MyViewHolder> {
 
     List<Quiz> quizzes;
-    Quiz currentQuiz;
+
     Context context;
 
     public QuizRVAdapter(Context pC, List<Quiz> pQuizzes){
@@ -35,8 +35,9 @@ public class QuizRVAdapter extends RecyclerView.Adapter<QuizRVAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        currentQuiz = quizzes.get(position);
-        holder.quizNameTV.setText(currentQuiz.getName());
+        Quiz quiz = quizzes.get(position);
+        holder.currentQuiz = quiz;
+        holder.quizNameTV.setText(holder.currentQuiz.getName());
     }
 
     @Override
@@ -48,12 +49,25 @@ public class QuizRVAdapter extends RecyclerView.Adapter<QuizRVAdapter.MyViewHold
 
         TextView quizNameTV;
         CardView rowCV;
+
+        Quiz currentQuiz;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             quizNameTV = itemView.findViewById(R.id.quizRowQuizName);
             rowCV = itemView.findViewById(R.id.quizRowCardView);
 
-            rowCV.setOnClickListener(onCardClicked);
+            rowCV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, ViewQuestionsActivity.class);
+                    Bundle quizInfo = new Bundle();
+                    quizInfo.putString("quizId", currentQuiz.getID());
+                    quizInfo.putString("quizName", currentQuiz.getName());
+                    quizInfo.putString("seconds", currentQuiz.getSeconds());
+                    intent.putExtras(quizInfo);
+                    context.startActivity(intent);
+                }
+            });
         }
 
         public View.OnClickListener onCardClicked = new View.OnClickListener() {

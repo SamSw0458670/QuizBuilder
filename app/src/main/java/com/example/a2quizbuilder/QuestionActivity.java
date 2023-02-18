@@ -21,7 +21,9 @@ public class QuestionActivity extends AppCompatActivity {
 
     //initialize class variables
     final int btnOne = 1, btnTwo = 2, btnThree = 3, btnFour = 4;
-    int correct = 0, currentQuestion = 0, numQuestions, quizId;
+    int correct = 0, currentQuestion = 0, numQuestions;
+
+    String quizId;
     Intent intent;
     Bundle quizInfo;
 
@@ -59,6 +61,8 @@ public class QuestionActivity extends AppCompatActivity {
         optFourBtn.setOnClickListener(onOptionClicked);
         nextBtn.setOnClickListener(onOptionClicked);
 
+        db = new DBAdapter(this);
+
         //setup arraylists and hashmaps
         runSetup();
         //fill header with proper data
@@ -93,7 +97,7 @@ public class QuestionActivity extends AppCompatActivity {
 
     //function to determine if its the first question or not
     public void runSetup(){
-        quizId = intent.getIntExtra("quizId", 1);
+        quizId = intent.getStringExtra("quizId");
         currentQuestion = intent.getIntExtra("currQ", 0);
         if(currentQuestion > 0){
             getQuestions();
@@ -101,6 +105,7 @@ public class QuestionActivity extends AppCompatActivity {
         else{
             populateQuestions();
         }
+        setNumQuestions();
     }//end runSetup
 
     //function to get data from bundle
@@ -108,7 +113,7 @@ public class QuestionActivity extends AppCompatActivity {
 
         questionsO = intent.getParcelableArrayListExtra("QOs");
         correct = intent.getIntExtra("correct", 0);
-        setNumQuestions();
+
     }//end of notFirstRun
 
     //function to get ArrayList and hashmap data, and shuffle the questions
@@ -120,7 +125,7 @@ public class QuestionActivity extends AppCompatActivity {
     //function to fill the questions and answers array list
     public void populateQAndA(){
         db.open();
-        Cursor c = db.getAllQuestions(quizId);
+        Cursor c = db.getAllQuestions(Integer.parseInt(quizId));
         if(c.moveToFirst()){
             do{
                 Question question = new Question(c.getString(0), c.getString(1), c.getString(2));
@@ -312,7 +317,7 @@ public class QuestionActivity extends AppCompatActivity {
 
     //function to display the next question button
     public void revealNextBtn(){
-        if(currentQuestion == numQuestions) {
+        if((currentQuestion + 1) == numQuestions) {
             String fin = "Finish";
             nextBtn.setText(fin);
         }

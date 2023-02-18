@@ -36,6 +36,20 @@
         </TableRow>
 
         <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Spinner
+                android:id="@+id/mainSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/forSpinner"
+                android:textAlignment="center" />
+
+        </TableRow>
+
+        <TableRow
             android:id="@+id/startRow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

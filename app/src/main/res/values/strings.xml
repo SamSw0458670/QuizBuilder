@@ -36,5 +36,9 @@
     <string name="questionNumber">Question #</string>
     <string name="viewQuizzes">View Quizzes</string>
 
+    <string-array name="forSpinner">
+        <item>Select Quiz</item>
+    </string-array>
+
 
 </resources>
