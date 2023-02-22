@@ -23,7 +23,13 @@
                 android:layout_gravity="start|center_vertical"
                 android:layout_marginLeft="6dp"
                 android:backgroundTint="@color/dark_blue"
-                android:text="@string/back" />
+                android:text="@string/back"
+                android:textColor="@color/white" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
             <Button
                 android:id="@+id/EQuizDeleteBtn"
@@ -32,19 +38,20 @@
                 android:layout_gravity="start|center_vertical"
                 android:layout_marginLeft="6dp"
                 android:backgroundTint="@color/dark_blue"
-                android:text="@string/delete" />
+                android:text="@string/delete"
+                android:textColor="@color/white" />
 
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/EQuizQuizNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_span="2"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/quizName"
@@ -55,18 +62,21 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:gravity="center">
+            android:layout_weight="3">
 
             <EditText
                 android:id="@+id/EQuizQuizNameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="5dp"
+                android:layout_span="2"
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="@string/fillerQuizName" />
+                android:text="@string/fillerQuizName"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
         </TableRow>
 
         <TableRow
@@ -96,9 +106,11 @@
                 android:id="@+id/EQuizPlusBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_span="2"
                 android:backgroundTint="@color/dark_blue"
-                android:text="@string/plus" />
+                android:padding="10dp"
+                android:text="@string/plus"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
         </TableRow>
 
         <TableRow
@@ -114,6 +126,7 @@
                 android:layout_span="2"
                 android:text="@string/number"
                 android:textAlignment="center"
+                android:textColor="@color/black"
                 android:textSize="30sp" />
         </TableRow>
 
@@ -127,30 +140,41 @@
                 android:id="@+id/EQuizMinusBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_span="2"
                 android:backgroundTint="@color/dark_blue"
-                android:text="@string/minus" />
+                android:padding="10dp"
+                android:text="@string/minus"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/EQuizSaveBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/dark_blue"
-                android:text="@string/save" />
+            android:gravity="center|top">
 
             <Button
                 android:id="@+id/EQuizCancelBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
                 android:backgroundTint="@color/dark_blue"
-                android:text="@string/cancel" />
+                android:padding="15dp"
+                android:text="@string/cancel"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/EQuizSaveBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:backgroundTint="@color/dark_blue"
+                android:padding="15dp"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
         </TableRow>
 
     </TableLayout>

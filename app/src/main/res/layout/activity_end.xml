@@ -8,7 +8,8 @@
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/dark_blue">
 
         <TableRow
             android:layout_width="match_parent"
@@ -20,10 +21,10 @@
                 android:id="@+id/messageTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/textBG"
+                android:background="@color/dark_blue"
                 android:gravity="center_horizontal"
                 android:text="@string/goodJob"
-                android:textColor="@color/black"
+                android:textColor="@color/yellow"
                 android:textSize="48sp" />
         </TableRow>
 
@@ -37,10 +38,10 @@
                 android:id="@+id/scoreTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/textBG"
+                android:background="@color/dark_blue"
                 android:gravity="center_horizontal"
                 android:text="@string/score"
-                android:textColor="@color/black"
+                android:textColor="@color/yellow"
                 android:textSize="34sp" />
         </TableRow>
 
@@ -54,10 +55,10 @@
                 android:id="@+id/scoreValueTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/textBG"
+                android:background="@color/dark_blue"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/placeholder"
-                android:textColor="@color/black"
+                android:textColor="@color/yellow"
                 android:textSize="60sp" />
         </TableRow>
 
@@ -71,8 +72,9 @@
                 android:id="@+id/backToMenuBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/buttonBG"
+                android:backgroundTint="@color/yellow"
                 android:text="@string/backToMenu"
+                android:textColor="@color/black"
                 android:textSize="20sp" />
         </TableRow>
     </TableLayout>
