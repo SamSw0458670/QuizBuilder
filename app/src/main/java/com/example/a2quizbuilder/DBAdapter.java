@@ -140,14 +140,12 @@ public class DBAdapter {
 
     //function that deletes a quiz and all its associated questions
     public boolean deleteQuiz(long quizId) {
-        boolean successQuiz = false;
         boolean successQuestions = db.delete(TABLE_QUESTION_NAME,
                 QUIZ_ID_COL + "=" + quizId, null) >0;
 
-        if(successQuestions){
-            successQuiz = db.delete(TABLE_QUIZ_NAME,
-                    ID_COL + "=" + quizId, null) >0;
-        }
+        boolean successQuiz = db.delete(TABLE_QUIZ_NAME,
+                ID_COL + "=" + quizId, null) >0;
+
 
         return successQuiz;
     }
