@@ -1,9 +1,11 @@
 package com.example.a2quizbuilder;
 
+import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -115,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         spinAdapter.setDropDownViewResource(spinItem);
         spinner.setAdapter(spinAdapter);
+
     }
 
     public void loadQuizzes(){
@@ -135,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                long id) {
 
         quizId = quizList.get(position).getID();
+        ((TextView) parent.getChildAt(0)).setTextColor(Color.BLACK);
     }
 
     @Override
