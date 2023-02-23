@@ -76,6 +76,7 @@ public class ModifyQuestionActivity extends AppCompatActivity {
         getQuestionInfo();
         questionET.setText(question);
         answerET.setText(answer);
+        checkEditing();
     }
 
     private void getQuestionInfo() {
@@ -91,6 +92,13 @@ public class ModifyQuestionActivity extends AppCompatActivity {
             questionId = defaultId;
             question = defaultQuestion;
             answer = defaultAnswer;
+        }
+    }
+
+    private void checkEditing(){
+        editing = questionIntent.getBooleanExtra("editing", true);
+        if(!editing){
+            deleteBtn.setVisibility(View.INVISIBLE);
         }
     }
 
