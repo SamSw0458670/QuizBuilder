@@ -121,13 +121,23 @@ public class ModifyQuizActivity extends AppCompatActivity {
 
     private void increaseSeconds(){
         int sec = Integer.parseInt(numSecondsTV.getText().toString());
-        sec++;
+        if(sec < 99){
+            sec++;
+        } else {
+            Toast.makeText(ModifyQuizActivity.this,
+                    "Maximum time is 99 seconds", Toast.LENGTH_LONG).show();
+        }
         numSecondsTV.setText(String.valueOf(sec));
     }
 
     private void decreaseSeconds(){
         int sec = Integer.parseInt(numSecondsTV.getText().toString());
-        sec--;
+        if(sec > 1){
+            sec--;
+        } else {
+            Toast.makeText(ModifyQuizActivity.this,
+                    "Minimum time is 1 second", Toast.LENGTH_LONG).show();
+        }
         numSecondsTV.setText(String.valueOf(sec));
     }
 
@@ -144,33 +154,36 @@ public class ModifyQuizActivity extends AppCompatActivity {
     }
 
     private void updateQuiz(){
-        db.open();
-        if(db.updateQuiz(Long.parseLong(quizId), quizName, quizSeconds)){
-            Toast.makeText(ModifyQuizActivity.this,
-                    "Quiz Updated",Toast.LENGTH_LONG).show();
+        if(validateQuizName()) {
+            db.open();
+            if (db.updateQuiz(Long.parseLong(quizId), quizName, quizSeconds)) {
+                Toast.makeText(ModifyQuizActivity.this,
+                        "Quiz Updated", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(ModifyQuizActivity.this,
+                        "Error updating quiz, please try again", Toast.LENGTH_LONG).show();
+            }
+            db.close();
+            goToViewQuestions();
         }
-        else{
-            Toast.makeText(ModifyQuizActivity.this,
-                    "Error updating quiz, please try again",Toast.LENGTH_LONG).show();
-        }
-        db.close();
-        goToViewQuestions();
     }
 
     private void createQuiz(){
-        try{
-            db.open();
-            long id = db.addNewQuiz(quizName, quizSeconds);
-            db.close();
-            Toast.makeText(ModifyQuizActivity.this,
-                    "Quiz Added",Toast.LENGTH_LONG).show();
+        if(validateQuizName()) {
+            try {
+                db.open();
+                long id = db.addNewQuiz(quizName, quizSeconds);
+                db.close();
+                Toast.makeText(ModifyQuizActivity.this,
+                        "Quiz Added", Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(ModifyQuizActivity.this,
+                        "Error adding quiz, please try again", Toast.LENGTH_LONG).show();
+            }
+            ;
+            goToViewQuizzes();
         }
-        catch(Exception e){
-            e.printStackTrace();
-            Toast.makeText(ModifyQuizActivity.this,
-                    "Error adding quiz, please try again",Toast.LENGTH_LONG).show();
-        };
-        goToViewQuizzes();
     }
 
     private void deleteQuiz() {
@@ -204,5 +217,15 @@ public class ModifyQuizActivity extends AppCompatActivity {
     private void goToViewQuizzes(){
         Intent intent = new Intent(ModifyQuizActivity.this, ViewQuizzesActivity.class);
         startActivity(intent);
+    }
+
+    private boolean validateQuizName(){
+        if (!quizName.isEmpty()){
+            return true;
+        } else {
+            Toast.makeText(ModifyQuizActivity.this,
+                    "There must be text in the name field", Toast.LENGTH_LONG).show();
+            return false;
+        }
     }
 }

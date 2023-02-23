@@ -116,34 +116,35 @@ public class ModifyQuestionActivity extends AppCompatActivity {
     }
 
     private void updateQuestion(){
-        db.open();
-        if(db.updateQuestion(Long.parseLong(questionId), question, answer)){
-            Toast.makeText(ModifyQuestionActivity.this,
-                    "Question Updated",Toast.LENGTH_LONG).show();
+        if(validateInput()) {
+            db.open();
+            if (db.updateQuestion(Long.parseLong(questionId), question, answer)) {
+                Toast.makeText(ModifyQuestionActivity.this,
+                        "Question Updated", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(ModifyQuestionActivity.this,
+                        "Something Went Wrong", Toast.LENGTH_LONG).show();
+            }
+            db.close();
+            goToViewQuestions();
         }
-        else{
-            Toast.makeText(ModifyQuestionActivity.this,
-                    "Something Went Wrong",Toast.LENGTH_LONG).show();
-        }
-        db.close();
-        goToViewQuestions();
     }
 
     private void createQuestion(){
-
-        try {
-            db.open();
-            long id = db.addNewQuestion(quizId, question, answer);
-            db.close();
-            Toast.makeText(ModifyQuestionActivity.this,
-                    "Question Created", Toast.LENGTH_LONG).show();
+        if(validateInput()) {
+            try {
+                db.open();
+                long id = db.addNewQuestion(quizId, question, answer);
+                db.close();
+                Toast.makeText(ModifyQuestionActivity.this,
+                        "Question Created", Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(ModifyQuestionActivity.this,
+                        "Error creating question, please try again", Toast.LENGTH_LONG).show();
+            }
+            goToViewQuestions();
         }
-        catch(Exception e){
-            e.printStackTrace();
-            Toast.makeText(ModifyQuestionActivity.this,
-                    "Error creating question, please try again", Toast.LENGTH_LONG).show();
-        }
-        goToViewQuestions();
     }
 
     private void deleteQuestion(){
@@ -165,6 +166,17 @@ public class ModifyQuestionActivity extends AppCompatActivity {
 
 
         startActivity(intent);
+    }
+
+    private boolean validateInput() {
+
+        if (!question.isEmpty() && !answer.isEmpty()){
+            return true;
+        } else {
+            Toast.makeText(ModifyQuestionActivity.this,
+                    "There must be text in both fields", Toast.LENGTH_LONG).show();
+            return false;
+        }
     }
 
 }
