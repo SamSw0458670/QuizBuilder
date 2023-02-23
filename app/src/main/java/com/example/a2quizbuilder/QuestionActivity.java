@@ -27,7 +27,7 @@ public class QuestionActivity extends AppCompatActivity {
     Intent intent;
     Bundle quizInfo;
 
-    Button optOneBtn, optTwoBtn, optThreeBtn, optFourBtn, nextBtn;
+    Button optOneBtn, optTwoBtn, optThreeBtn, optFourBtn, nextBtn, backBtn;
     ArrayList<String> options = new ArrayList<>();
     ArrayList<Question> questionsO = new ArrayList<>();
 
@@ -53,6 +53,7 @@ public class QuestionActivity extends AppCompatActivity {
         questionTextView = findViewById(R.id.questionPromptTextView);
         qProgress = findViewById(R.id.qFractionTextView);
         corNum = findViewById(R.id.correctValueTextView);
+        backBtn = findViewById(R.id.questionBackBtn);
 
         //set Listeners
         optOneBtn.setOnClickListener(onOptionClicked);
@@ -60,6 +61,8 @@ public class QuestionActivity extends AppCompatActivity {
         optThreeBtn.setOnClickListener(onOptionClicked);
         optFourBtn.setOnClickListener(onOptionClicked);
         nextBtn.setOnClickListener(onOptionClicked);
+        backBtn.setOnClickListener(onBackClicked);
+
 
         db = new DBAdapter(this);
 
@@ -92,6 +95,14 @@ public class QuestionActivity extends AppCompatActivity {
                     nextQuestion();
                     break;
             }
+        }
+    };
+
+    public View.OnClickListener onBackClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(QuestionActivity.this, MainActivity.class);
+            startActivity(intent);
         }
     };
 
