@@ -87,11 +87,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public void onClick(View v) {
-            Intent i = new Intent(getApplicationContext(), QuestionActivity.class);
-            Bundle quizInfo = new Bundle();
-            quizInfo.putString("quizId", quizId);
-            i.putExtras(quizInfo);
-            startActivity(i); //Go to the first question of the quiz
+            if(validateQuiz()) {
+                Intent i = new Intent(getApplicationContext(), QuestionActivity.class);
+                Bundle quizInfo = new Bundle();
+                quizInfo.putString("quizId", quizId);
+                i.putExtras(quizInfo);
+                startActivity(i); //Go to the first question of the quiz
+            }
         }
     };
 
@@ -145,6 +147,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private boolean validateQuiz() {
+        int minQuestions = 5;
+        boolean result = true;
+        db.open();
+        Cursor c = db.getAllQuestions(Integer.parseInt(quizId));
+        if(c.getCount() < minQuestions){
+            Toast.makeText(MainActivity.this,
+                    "There must be at least " + minQuestions +" questions in the quiz",
+                    Toast.LENGTH_LONG).show();
+            result = false;
+        }
+        db.close();
+        return result;
     }
 
 }

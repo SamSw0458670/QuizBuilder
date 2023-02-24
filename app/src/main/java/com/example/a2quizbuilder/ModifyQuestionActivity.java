@@ -175,13 +175,30 @@ public class ModifyQuestionActivity extends AppCompatActivity {
 
     private boolean validateInput() {
 
-        if (!question.isEmpty() && !answer.isEmpty()){
-            return true;
-        } else {
-            Toast.makeText(ModifyQuestionActivity.this,
-                    "There must be text in both fields", Toast.LENGTH_LONG).show();
-            return false;
+        if (!question.isEmpty() && !answer.isEmpty()) {
+            return !testForSameAnswer();
         }
+
+        Toast.makeText(ModifyQuestionActivity.this,
+                    "There must be text in both fields", Toast.LENGTH_LONG).show();
+        return false;
+    }
+
+    private boolean testForSameAnswer(){
+        db.open();
+        Cursor c = db.getAllAnswers(Long.parseLong(quizId));
+        if(c.moveToFirst()){
+            do{
+                if (Objects.equals(answer, c.getString(0))){
+                    Toast.makeText(ModifyQuestionActivity.this,
+                            "Answer cannot be the same as another answer in this quiz",
+                            Toast.LENGTH_LONG).show();
+                    return true;
+                }
+            }while(c.moveToNext());
+        }
+        db.close();
+        return false;
     }
 
 }

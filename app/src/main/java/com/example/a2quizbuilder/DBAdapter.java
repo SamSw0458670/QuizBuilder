@@ -168,6 +168,15 @@ public class DBAdapter {
                 null, null, null);
     }
 
+    public Cursor getAllAnswers(long quizId){
+        String whereClause = QUIZ_ID_COL + " = ?";
+
+        return db.query(TABLE_QUESTION_NAME, new String[]
+                        {ANSWER_COL},
+                whereClause, new String[] {String.valueOf(quizId)},
+                null, null, null);
+    }
+
     //function that returns a Cursor with a specific question based on the question id
     public Cursor getSingleQuestion(long questionId) throws SQLException {
         String whereClause = ID_COL + " = ?";
