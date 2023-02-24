@@ -69,8 +69,7 @@ public class QuestionRVAdapter extends RecyclerView.Adapter<QuestionRVAdapter.My
                     Bundle questionInfo = new Bundle();
                     questionInfo.putString("quizId", String.valueOf(quizId));
                     questionInfo.putString("id", currQuestion.getID());
-                    questionInfo.putString("question", currQuestion.getQuestion());
-                    questionInfo.putString("answer", currQuestion.getAnswer());
+                    questionInfo.putBoolean("editing", true);
                     intent.putExtras(questionInfo);
                     context.startActivity(intent);
                 }

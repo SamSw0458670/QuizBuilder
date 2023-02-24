@@ -65,10 +65,8 @@ public class ViewQuestionsActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(ViewQuestionsActivity.this, ModifyQuestionActivity.class);
-            Bundle newQuestion = new Bundle();
-            newQuestion.putBoolean("editing", false);
-            newQuestion.putString("quizId", String.valueOf(quizId));
-            intent.putExtras(newQuestion);
+            quizInfo.putBoolean("editing", false);
+            intent.putExtras(quizInfo);
             startActivity(intent);
         }
     };
@@ -77,6 +75,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(ViewQuestionsActivity.this, ModifyQuizActivity.class);
+            quizInfo.putBoolean("editing", true);
             intent.putExtras(quizInfo);
             startActivity(intent);
         }

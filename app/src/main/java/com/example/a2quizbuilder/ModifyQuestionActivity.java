@@ -3,6 +3,7 @@ package com.example.a2quizbuilder;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -85,8 +86,14 @@ public class ModifyQuestionActivity extends AppCompatActivity {
 
         if(editing){
             questionId = questionIntent.getStringExtra("id");
-            question = questionIntent.getStringExtra("question");
-            answer = questionIntent.getStringExtra("answer");
+
+            db.open();
+            Cursor c = db.getSingleQuestion(Long.parseLong(questionId));
+            if(c.moveToFirst()){
+                question = c.getString(0);
+                answer = c.getString(1);
+            }
+            db.close();
         }
         else{
             questionId = defaultId;
@@ -163,8 +170,6 @@ public class ModifyQuestionActivity extends AppCompatActivity {
     private void goToViewQuestions(){
         Intent intent = new Intent(ModifyQuestionActivity.this, ViewQuestionsActivity.class);
         intent.putExtras(questionInfo);
-
-
         startActivity(intent);
     }
 

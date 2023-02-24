@@ -170,10 +170,13 @@ public class DBAdapter {
 
     //function that returns a Cursor with a specific question based on the question id
     public Cursor getSingleQuestion(long questionId) throws SQLException {
+        String whereClause = ID_COL + " = ?";
 
-        Cursor question = db.query(true, TABLE_QUIZ_NAME, new String[]
-                        {ID_COL, QUESTION_COL, ANSWER_COL}, ID_COL + "=" + questionId,
-                null, null, null, null, null);
+        Cursor question = db.query(true, TABLE_QUESTION_NAME, new String[]
+                        {QUESTION_COL, ANSWER_COL}, whereClause,
+                new String[] {String.valueOf(questionId)},
+                null, null, null, null);
+
         if(question != null){
             question.moveToFirst();
         }

@@ -62,25 +62,10 @@ public class QuizRVAdapter extends RecyclerView.Adapter<QuizRVAdapter.MyViewHold
                     Intent intent = new Intent(context, ViewQuestionsActivity.class);
                     Bundle quizInfo = new Bundle();
                     quizInfo.putString("quizId", currentQuiz.getID());
-                    quizInfo.putString("quizName", currentQuiz.getName());
-                    quizInfo.putString("seconds", currentQuiz.getSeconds());
                     intent.putExtras(quizInfo);
                     context.startActivity(intent);
                 }
             });
         }
-
-        public View.OnClickListener onCardClicked = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ViewQuestionsActivity.class);
-                Bundle quizInfo = new Bundle();
-                quizInfo.putString("quizId", currentQuiz.getID());
-                quizInfo.putString("quizName", currentQuiz.getName());
-                quizInfo.putString("seconds", currentQuiz.getSeconds());
-                intent.putExtras(quizInfo);
-                context.startActivity(intent);
-            }
-        };
     }
 }
