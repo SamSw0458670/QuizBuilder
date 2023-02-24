@@ -72,6 +72,7 @@ public class DBAdapter {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
             // this method is called to check if the table exists already.
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUIZ_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUESTION_NAME);
@@ -81,6 +82,7 @@ public class DBAdapter {
 
     //open the database
     public DBAdapter open() throws SQLException {
+
         db = DBHelper.getWritableDatabase();
         return this;
     }
@@ -120,9 +122,10 @@ public class DBAdapter {
     }
 
     //function that returns a Cursor that has all the quizzes
-    public Cursor getAllQuizzes(){
+    public Cursor getAllQuizzes() {
+
         return db.query(TABLE_QUIZ_NAME, new String[]
-                {ID_COL, QUIZ_NAME_COL, QUIZ_SECONDS_PER_QUESTION_COL},
+                        {ID_COL, QUIZ_NAME_COL, QUIZ_SECONDS_PER_QUESTION_COL},
                 null, null, null, null, QUIZ_NAME_COL);
     }
 
@@ -130,9 +133,9 @@ public class DBAdapter {
     public Cursor getSingleQuiz(long quizId) throws SQLException {
 
         Cursor quiz = db.query(true, TABLE_QUIZ_NAME, new String[]
-                {QUIZ_NAME_COL, QUIZ_SECONDS_PER_QUESTION_COL}, ID_COL + "=" + quizId,
+                        {QUIZ_NAME_COL, QUIZ_SECONDS_PER_QUESTION_COL}, ID_COL + "=" + quizId,
                 null, null, null, null, null);
-        if(quiz != null){
+        if (quiz != null) {
             quiz.moveToFirst();
         }
         return quiz;
@@ -140,17 +143,19 @@ public class DBAdapter {
 
     //function that deletes a quiz and all its associated questions
     public boolean deleteQuiz(long quizId) {
+
         boolean successQuestions = db.delete(TABLE_QUESTION_NAME,
-                QUIZ_ID_COL + "=" + quizId, null) >0;
+                QUIZ_ID_COL + "=" + quizId, null) > 0;
 
         boolean successQuiz = db.delete(TABLE_QUIZ_NAME,
-                ID_COL + "=" + quizId, null) >0;
+                ID_COL + "=" + quizId, null) > 0;
 
 
         return successQuiz;
     }
 
-    public boolean updateQuiz(long quizId, String quizName, String seconds){
+    //function that updates the quiz name and seconds per question
+    public boolean updateQuiz(long quizId, String quizName, String seconds) {
 
         ContentValues cval = new ContentValues();
         cval.put(QUIZ_NAME_COL, quizName);
@@ -159,34 +164,38 @@ public class DBAdapter {
     }
 
     //function that returns a Cursor with all the questions from a specific quiz using the quizId
-    public Cursor getAllQuestions(long quizId){
+    public Cursor getAllQuestions(long quizId) {
+
         String whereClause = QUIZ_ID_COL + " = ?";
 
         return db.query(TABLE_QUESTION_NAME, new String[]
                         {ID_COL, QUESTION_COL, ANSWER_COL},
-                whereClause, new String[] {String.valueOf(quizId)},
+                whereClause, new String[]{String.valueOf(quizId)},
                 null, null, null);
     }
 
-    public Cursor getAllAnswers(long quizId){
+    //function that returns all the answers from the questions of a specific quiz
+    public Cursor getAllAnswers(long quizId) {
+
         String whereClause = QUIZ_ID_COL + " = ?";
 
         return db.query(TABLE_QUESTION_NAME, new String[]
                         {ANSWER_COL},
-                whereClause, new String[] {String.valueOf(quizId)},
+                whereClause, new String[]{String.valueOf(quizId)},
                 null, null, null);
     }
 
     //function that returns a Cursor with a specific question based on the question id
     public Cursor getSingleQuestion(long questionId) throws SQLException {
+
         String whereClause = ID_COL + " = ?";
 
         Cursor question = db.query(true, TABLE_QUESTION_NAME, new String[]
                         {QUESTION_COL, ANSWER_COL}, whereClause,
-                new String[] {String.valueOf(questionId)},
+                new String[]{String.valueOf(questionId)},
                 null, null, null, null);
 
-        if(question != null){
+        if (question != null) {
             question.moveToFirst();
         }
         return question;
@@ -196,19 +205,16 @@ public class DBAdapter {
     public boolean deleteQuestion(long questionId) {
 
         return db.delete(TABLE_QUESTION_NAME,
-                ID_COL + "=" + questionId, null) >0;
+                ID_COL + "=" + questionId, null) > 0;
     }
 
-    public boolean updateQuestion(long questionId, String question, String answer){
+    //function to update a questions question and answer
+    public boolean updateQuestion(long questionId, String question, String answer) {
 
         ContentValues cval = new ContentValues();
         cval.put(QUESTION_COL, question);
         cval.put(ANSWER_COL, answer);
         return db.update(TABLE_QUESTION_NAME, cval,
                 ID_COL + "=" + questionId, null) > 0;
-
     }
-
-
-
 }

@@ -2,28 +2,28 @@ package com.example.a2quizbuilder;
 
 public class Quiz {
 
-    private String name;
+    private String m_name;
 
-    private int secondsPerQuestion;
+    private int m_secondsPerQuestion;
 
-    private String id;
+    private String m_id;
 
-    public Quiz(String pId, String pName, String pSeconds){
-        this.id = pId;
-        this.name = pName;
-        this.secondsPerQuestion = Integer.parseInt(pSeconds);
+    public Quiz(String pId, String pName, String pSeconds) {
+        this.m_id = pId;
+        this.m_name = pName;
+        this.m_secondsPerQuestion = Integer.parseInt(pSeconds);
     }
 
-    public String getID(){
-        return this.id;
+    //getters
+    public String getID() {
+        return this.m_id;
     }
 
-    public String getName(){
-        return this.name;
+    public String getM_name() {
+        return this.m_name;
     }
 
-    public String getSeconds(){
-        return String.valueOf(this.secondsPerQuestion);
+    public String getSeconds() {
+        return String.valueOf(this.m_secondsPerQuestion);
     }
-
 }

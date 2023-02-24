@@ -30,6 +30,7 @@ public class ModifyQuestionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_question);
 
@@ -73,62 +74,82 @@ public class ModifyQuestionActivity extends AppCompatActivity {
         }
     };
 
-    private void populateInfo(){
+    //function to call functions to get and fill the question and answer edit texts
+    private void populateInfo() {
+        checkEditing();
         getQuestionInfo();
         questionET.setText(question);
         answerET.setText(answer);
-        checkEditing();
+
     }
 
+    //function to get the question information
     private void getQuestionInfo() {
-        editing = questionIntent.getBooleanExtra("editing", true);
+
         quizId = questionIntent.getStringExtra("quizId");
 
-        if(editing){
+        //if updating a question, get info from the database
+        if (editing) {
             questionId = questionIntent.getStringExtra("id");
 
             db.open();
             Cursor c = db.getSingleQuestion(Long.parseLong(questionId));
-            if(c.moveToFirst()){
+            if (c.moveToFirst()) {
                 question = c.getString(0);
                 answer = c.getString(1);
             }
             db.close();
         }
-        else{
+        //else, its a new question. Use the default information
+        else {
             questionId = defaultId;
             question = defaultQuestion;
             answer = defaultAnswer;
         }
     }
 
-    private void checkEditing(){
+    //function to check if the user is editing an
+    // existing question or making a new one
+    private void checkEditing() {
+
         editing = questionIntent.getBooleanExtra("editing", true);
-        if(!editing){
+
+        //if a new question is being made, hide the delete button
+        if (!editing) {
             deleteBtn.setVisibility(View.INVISIBLE);
         }
     }
 
-    private void saveChanges(){
+    //function to save the question to the database
+    private void saveChanges() {
+
         question = questionET.getText().toString();
         answer = answerET.getText().toString();
 
-        if(!Objects.equals(questionId, defaultId)){
+        //if editing, call the update question function
+        if (editing) {
             updateQuestion();
         }
+        //else, call the create question function
         else {
             createQuestion();
         }
-
     }
 
-    private void updateQuestion(){
-        if(validateInput()) {
+    //function to update the existing question with the new information
+    private void updateQuestion() {
+
+        //validate the text fields
+        if (validateInput()) {
             db.open();
+
+            //try to update the question
             if (db.updateQuestion(Long.parseLong(questionId), question, answer)) {
                 Toast.makeText(ModifyQuestionActivity.this,
                         "Question Updated", Toast.LENGTH_LONG).show();
-            } else {
+            }
+            //inform the user if it fails
+            else {
                 Toast.makeText(ModifyQuestionActivity.this,
                         "Something Went Wrong", Toast.LENGTH_LONG).show();
             }
@@ -137,15 +158,22 @@ public class ModifyQuestionActivity extends AppCompatActivity {
         }
     }
 
-    private void createQuestion(){
-        if(validateInput()) {
+    //function to save the new question to the database
+    private void createQuestion() {
+
+        //validate the text fields
+        if (validateInput()) {
+
+            //try to create teh question
             try {
                 db.open();
                 long id = db.addNewQuestion(quizId, question, answer);
                 db.close();
                 Toast.makeText(ModifyQuestionActivity.this,
                         "Question Created", Toast.LENGTH_LONG).show();
-            } catch (Exception e) {
+            }
+            //inform the user if it fails
+            catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(ModifyQuestionActivity.this,
                         "Error creating question, please try again", Toast.LENGTH_LONG).show();
@@ -154,12 +182,18 @@ public class ModifyQuestionActivity extends AppCompatActivity {
         }
     }
 
-    private void deleteQuestion(){
+    //function to delete the question from the database
+    private void deleteQuestion() {
+
         db.open();
-        if(db.deleteQuestion(Long.parseLong(questionId))){
+
+        //try to delete the question
+        if (db.deleteQuestion(Long.parseLong(questionId))) {
             Toast.makeText(ModifyQuestionActivity.this,
                     "Question Deleted", Toast.LENGTH_LONG).show();
-        } else {
+        }
+        //inform the user if it fails
+        else {
             Toast.makeText(ModifyQuestionActivity.this,
                     "Error deleting question, please try again", Toast.LENGTH_LONG).show();
         }
@@ -167,38 +201,45 @@ public class ModifyQuestionActivity extends AppCompatActivity {
         goToViewQuestions();
     }
 
-    private void goToViewQuestions(){
+    //function to go to the view questions activity
+    private void goToViewQuestions() {
+
         Intent intent = new Intent(ModifyQuestionActivity.this, ViewQuestionsActivity.class);
         intent.putExtras(questionInfo);
         startActivity(intent);
     }
 
+    //function to check if question and answer fields have text in them
     private boolean validateInput() {
 
+        //if they arent empty, give the result of the test for same answer function
         if (!question.isEmpty() && !answer.isEmpty()) {
             return !testForSameAnswer();
         }
 
+        //tell the user why their input isn't valid
         Toast.makeText(ModifyQuestionActivity.this,
-                    "There must be text in both fields", Toast.LENGTH_LONG).show();
+                "There must be text in both fields", Toast.LENGTH_LONG).show();
         return false;
     }
 
-    private boolean testForSameAnswer(){
+    //function to check if the given answer is the same as another answer in the same quiz
+    private boolean testForSameAnswer() {
+
         db.open();
         Cursor c = db.getAllAnswers(Long.parseLong(quizId));
-        if(c.moveToFirst()){
-            do{
-                if (Objects.equals(answer, c.getString(0))){
+        if (c.moveToFirst()) {
+            do {
+                //if the answer is the same as another, tell the user
+                if (Objects.equals(answer, c.getString(0))) {
                     Toast.makeText(ModifyQuestionActivity.this,
                             "Answer cannot be the same as another answer in this quiz",
                             Toast.LENGTH_LONG).show();
                     return true;
                 }
-            }while(c.moveToNext());
+            } while (c.moveToNext());
         }
         db.close();
         return false;
     }
-
 }

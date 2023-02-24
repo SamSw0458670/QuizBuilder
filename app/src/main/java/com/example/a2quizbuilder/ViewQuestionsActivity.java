@@ -32,6 +32,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_questions);
 
@@ -50,12 +51,12 @@ public class ViewQuestionsActivity extends AppCompatActivity {
 
         db = new DBAdapter(this);
         displayQuestions();
-
     }
 
     public View.OnClickListener onBackClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
             Intent intent = new Intent(ViewQuestionsActivity.this, ViewQuizzesActivity.class);
             startActivity(intent);
         }
@@ -64,6 +65,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
     public View.OnClickListener onNewClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
             Intent intent = new Intent(ViewQuestionsActivity.this, ModifyQuestionActivity.class);
             quizInfo.putBoolean("editing", false);
             intent.putExtras(quizInfo);
@@ -74,6 +76,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
     public View.OnClickListener onQuizPropsClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
             Intent intent = new Intent(ViewQuestionsActivity.this, ModifyQuizActivity.class);
             quizInfo.putBoolean("editing", true);
             intent.putExtras(quizInfo);
@@ -81,24 +84,30 @@ public class ViewQuestionsActivity extends AppCompatActivity {
         }
     };
 
-    public void fillQuizId(){
+    //function to get the quiz id
+    public void fillQuizId() {
+
         quizId = Long.parseLong(quizInfo.getString("quizId"));
     }
 
-    public void loadQuestions(){
+    //function to load the questions from database into the array list
+    public void loadQuestions() {
+
         fillQuizId();
         db.open();
         Cursor c = db.getAllQuestions(quizId);
-        if(c.moveToFirst()){
-            do{
+        if (c.moveToFirst()) {
+            do {
                 Question question = new Question(c.getString(0), c.getString(1), c.getString(2));
                 questionList.add(question);
-            }while(c.moveToNext());
+            } while (c.moveToNext());
         }
         db.close();
     }
 
-    public void displayQuestions(){
+    //function to display the question array list in the recycler view
+    public void displayQuestions() {
+
         loadQuestions();
         recyclerAdapter = new QuestionRVAdapter(this, questionList, quizId);
 

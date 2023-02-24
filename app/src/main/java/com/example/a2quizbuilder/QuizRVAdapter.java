@@ -20,7 +20,7 @@ public class QuizRVAdapter extends RecyclerView.Adapter<QuizRVAdapter.MyViewHold
 
     Context context;
 
-    public QuizRVAdapter(Context pC, List<Quiz> pQuizzes){
+    public QuizRVAdapter(Context pC, List<Quiz> pQuizzes) {
         this.quizzes = pQuizzes;
         this.context = pC;
     }
@@ -35,9 +35,10 @@ public class QuizRVAdapter extends RecyclerView.Adapter<QuizRVAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Quiz quiz = quizzes.get(position);
-        holder.currentQuiz = quiz;
-        holder.quizNameTV.setText(holder.currentQuiz.getName());
+
+        //set current quiz and text view
+        holder.currentQuiz = quizzes.get(position);
+        holder.quizNameTV.setText(holder.currentQuiz.getM_name());
     }
 
     @Override
@@ -51,6 +52,7 @@ public class QuizRVAdapter extends RecyclerView.Adapter<QuizRVAdapter.MyViewHold
         CardView rowCV;
 
         Quiz currentQuiz;
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             quizNameTV = itemView.findViewById(R.id.quizRowQuizName);

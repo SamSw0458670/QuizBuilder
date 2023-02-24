@@ -11,8 +11,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Objects;
-
 public class ModifyQuizActivity extends AppCompatActivity {
 
     Intent quizIntent;
@@ -31,6 +29,7 @@ public class ModifyQuizActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_quiz);
 
@@ -60,7 +59,7 @@ public class ModifyQuizActivity extends AppCompatActivity {
     public View.OnClickListener onBackClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            goToPreviousView();
+            goToPreviousActivity();
         }
     };
 
@@ -81,7 +80,7 @@ public class ModifyQuizActivity extends AppCompatActivity {
     public View.OnClickListener onMinusClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-           decreaseSeconds();
+            decreaseSeconds();
         }
     };
 
@@ -92,42 +91,56 @@ public class ModifyQuizActivity extends AppCompatActivity {
         }
     };
 
-    private void populateInfo(){
+    //function to get and set the quiz name and seconds values in the text fields
+    private void populateInfo() {
+
+        checkEditing();
         getQuizInfo();
         quizNameET.setText(quizName);
         numSecondsTV.setText(quizSeconds);
-        checkEditing();
     }
 
-    private void getQuizInfo(){
+    //function to get the quiz name and seconds
+    private void getQuizInfo() {
+
         quizId = quizIntent.getStringExtra("quizId");
-        if(quizId != null){
+
+        //if editing, get quiz info from the database
+        if (editing) {
             db.open();
             Cursor c = db.getSingleQuiz(Long.parseLong(quizId));
-            if(c.moveToFirst()){
+            if (c.moveToFirst()) {
                 quizName = c.getString(0);
                 quizSeconds = c.getString(1);
             }
             db.close();
         }
-        else{
+        //else, sue the default values
+        else {
             quizId = defaultId;
             quizName = defaultQuizName;
             quizSeconds = defaultSeconds;
         }
     }
 
-    private void checkEditing(){
+    //function to check if an existing quiz is being edited
+    private void checkEditing() {
+
         editing = quizIntent.getBooleanExtra("editing", true);
-        if(!editing){
+
+        //if a new quiz is being made, hide the delete button
+        if (!editing) {
             deleteBtn.setVisibility(View.INVISIBLE);
         }
     }
 
+    //function to increase the seconds value by 1
+    private void increaseSeconds() {
 
-    private void increaseSeconds(){
         int sec = Integer.parseInt(numSecondsTV.getText().toString());
-        if(sec < 99){
+        int maxSec = 99;
+        //do not increase seconds past 99
+        if (sec < maxSec) {
             sec++;
         } else {
             Toast.makeText(ModifyQuizActivity.this,
@@ -136,9 +149,13 @@ public class ModifyQuizActivity extends AppCompatActivity {
         numSecondsTV.setText(String.valueOf(sec));
     }
 
-    private void decreaseSeconds(){
+    //function to decrease the seconds value by 1
+    private void decreaseSeconds() {
+
         int sec = Integer.parseInt(numSecondsTV.getText().toString());
-        if(sec > 1){
+
+        //do not decrease seconds below 1
+        if (sec > 1) {
             sec--;
         } else {
             Toast.makeText(ModifyQuizActivity.this,
@@ -147,25 +164,35 @@ public class ModifyQuizActivity extends AppCompatActivity {
         numSecondsTV.setText(String.valueOf(sec));
     }
 
-    private void saveChanges(){
+    //function to save the new information to the database
+    private void saveChanges() {
+
         quizName = quizNameET.getText().toString();
         quizSeconds = numSecondsTV.getText().toString();
 
-        if(editing){
+        //if editing an existing quiz, call the update function
+        if (editing) {
             updateQuiz();
         }
-        else{
+        //if its a new quiz, call the create quiz function
+        else {
             createQuiz();
         }
     }
 
-    private void updateQuiz(){
-        if(validateQuizName()) {
+    //function to update the existing quiz with new information in the database
+    private void updateQuiz() {
+
+        //validate the quiz name
+        if (validateQuizName()) {
             db.open();
+            //try to update the quiz
             if (db.updateQuiz(Long.parseLong(quizId), quizName, quizSeconds)) {
                 Toast.makeText(ModifyQuizActivity.this,
                         "Quiz Updated", Toast.LENGTH_LONG).show();
-            } else {
+            }
+            //inform the user if it fails
+            else {
                 Toast.makeText(ModifyQuizActivity.this,
                         "Error updating quiz, please try again", Toast.LENGTH_LONG).show();
             }
@@ -174,30 +201,41 @@ public class ModifyQuizActivity extends AppCompatActivity {
         }
     }
 
-    private void createQuiz(){
-        if(validateQuizName()) {
+    //function to add the new quiz to the database
+    private void createQuiz() {
+
+        //validate the quiz name
+        if (validateQuizName()) {
+
+            //try to create the quiz
             try {
                 db.open();
                 long id = db.addNewQuiz(quizName, quizSeconds);
                 db.close();
                 Toast.makeText(ModifyQuizActivity.this,
                         "Quiz Added", Toast.LENGTH_LONG).show();
-            } catch (Exception e) {
+            }
+            //inform the user if it fails
+            catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(ModifyQuizActivity.this,
                         "Error adding quiz, please try again", Toast.LENGTH_LONG).show();
             }
-            ;
             goToViewQuizzes();
         }
     }
 
+    //function to delete the quiz
     private void deleteQuiz() {
+
         db.open();
+        //try to delete the quiz
         if (db.deleteQuiz(Long.parseLong(quizId))) {
             Toast.makeText(ModifyQuizActivity.this,
                     "Quiz Deleted", Toast.LENGTH_LONG).show();
-        } else {
+        }
+        //inform the user if it fails
+        else {
             Toast.makeText(ModifyQuizActivity.this,
                     "Error deleting quiz, please try again", Toast.LENGTH_LONG).show();
         }
@@ -205,30 +243,43 @@ public class ModifyQuizActivity extends AppCompatActivity {
         goToViewQuizzes();
     }
 
-    private void goToPreviousView(){
-        if(editing){
+    //function to determine which activity the user came from
+    private void goToPreviousActivity() {
+
+        //if editing, the suer came from the view questions activity
+        if (editing) {
             goToViewQuestions();
         }
-        else{
+        //else, the came from the view quizzes activity
+        else {
             goToViewQuizzes();
         }
     }
 
-    private void goToViewQuestions(){
+    //function to go to the view questions activity
+    private void goToViewQuestions() {
+
         Intent intent = new Intent(ModifyQuizActivity.this, ViewQuestionsActivity.class);
         intent.putExtras(quizInfo);
         startActivity(intent);
     }
 
-    private void goToViewQuizzes(){
+    //function to go to the view quizzes activity
+    private void goToViewQuizzes() {
+
         Intent intent = new Intent(ModifyQuizActivity.this, ViewQuizzesActivity.class);
         startActivity(intent);
     }
 
-    private boolean validateQuizName(){
-        if (!quizName.isEmpty()){
+    //function to ensure the quiz name is not empty
+    private boolean validateQuizName() {
+
+        //check if the quiz name is empty
+        if (!quizName.isEmpty()) {
             return true;
-        } else {
+        }
+        //if it is, tell the user
+        else {
             Toast.makeText(ModifyQuizActivity.this,
                     "There must be text in the name field", Toast.LENGTH_LONG).show();
             return false;

@@ -1,6 +1,5 @@
 package com.example.a2quizbuilder;
 
-import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -39,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -50,18 +50,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         viewQuizzesBtn.setOnClickListener(onViewQuizzesClicked);
         spinner.setOnItemSelectedListener(this);
 
-        try{
-            //String destPath = "/data/data/" + getPackageName() +"/database/MyDB";
+        //check for database, if it doesn't exist, make it
+        try {
             String destPath = Environment.getExternalStorageDirectory().getPath() +
                     getPackageName() + "/database/QuizDB";
             File f = new File(destPath);
-            if(!f.exists()){
+            if (!f.exists()) {
                 CopyDB(getBaseContext().getAssets().open("quizdb"),
                         new FileOutputStream(destPath));
             }
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void CopyDB(InputStream inputStream, OutputStream outputStream)
             throws IOException {
+
         //copy 1k bytes at a time
         byte[] buffer = new byte[1024];
         int length;
@@ -83,11 +84,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         outputStream.close();
     }
 
-    public View.OnClickListener onStartClicked = new View.OnClickListener(){
+    public View.OnClickListener onStartClicked = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
-            if(validateQuiz()) {
+            if (validateQuiz()) {
                 Intent i = new Intent(getApplicationContext(), QuestionActivity.class);
                 Bundle quizInfo = new Bundle();
                 quizInfo.putString("quizId", quizId);
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     };
 
-    public View.OnClickListener onViewQuizzesClicked = new View.OnClickListener(){
+    public View.OnClickListener onViewQuizzesClicked = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
@@ -107,13 +108,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     };
 
 
+    //function to load all the quizzes from the quiz list into the spinner
+    public void loadSpinner() {
 
-    public void loadSpinner(){
         loadQuizzes();
-        List<String> spinList =  new ArrayList<>();
+        List<String> spinList = new ArrayList<>();
         int spinItem = androidx.appcompat.R.layout.support_simple_spinner_dropdown_item;
-        for(int i = 0; i < quizList.size(); i++){
-            spinList.add(quizList.get(i).getName());
+
+        for (int i = 0; i < quizList.size(); i++) {
+            spinList.add(quizList.get(i).getM_name());
         }
 
         ArrayAdapter<String> spinAdapter = new ArrayAdapter<String>(this, spinItem, spinList);
@@ -123,19 +126,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    public void loadQuizzes(){
+    //function to fill the quiz array list with quizzes from the database
+    public void loadQuizzes() {
+
         db.open();
         Cursor c = db.getAllQuizzes();
-        if(c.moveToFirst()){
-            do{
-                Quiz quiz = new Quiz(c.getString(0),c.getString(1),
+        if (c.moveToFirst()) {
+            do {
+                Quiz quiz = new Quiz(c.getString(0), c.getString(1),
                         c.getString(2));
                 quizList.add(quiz);
-            }while(c.moveToNext());
+            } while (c.moveToNext());
         }
         db.close();
     }
 
+    //function to change quiz id to the selected quiz's id in the spinner
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position,
                                long id) {
@@ -144,24 +150,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         ((TextView) parent.getChildAt(0)).setTextColor(Color.BLACK);
     }
 
+    //override function necessary for spinner
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
+    //function to check if selected quiz has 5 or more questions in it
     private boolean validateQuiz() {
+
         int minQuestions = 5;
         boolean result = true;
         db.open();
         Cursor c = db.getAllQuestions(Integer.parseInt(quizId));
-        if(c.getCount() < minQuestions){
+        if (c.getCount() < minQuestions) {
             Toast.makeText(MainActivity.this,
-                    "There must be at least " + minQuestions +" questions in the quiz",
+                    "There must be at least " + minQuestions + " questions in the quiz",
                     Toast.LENGTH_LONG).show();
             result = false;
         }
         db.close();
         return result;
     }
-
 }

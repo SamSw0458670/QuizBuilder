@@ -23,7 +23,7 @@ public class QuestionRVAdapter extends RecyclerView.Adapter<QuestionRVAdapter.My
     long quizId;
     int questionCount = 1;
 
-    public QuestionRVAdapter(Context pC, List<Question> pQuestions, long pQuizId){
+    public QuestionRVAdapter(Context pC, List<Question> pQuestions, long pQuizId) {
         this.questions = pQuestions;
         this.context = pC;
         this.quizId = pQuizId;
@@ -39,6 +39,8 @@ public class QuestionRVAdapter extends RecyclerView.Adapter<QuestionRVAdapter.My
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+
+        //set values and text views for each question in the array
         holder.currQuestion = questions.get(position);
         holder.questionTV.setText(holder.currQuestion.getQuestion());
         holder.questionNumTV.setText(String.valueOf(questionCount));
@@ -56,8 +58,10 @@ public class QuestionRVAdapter extends RecyclerView.Adapter<QuestionRVAdapter.My
         CardView questionCV;
 
         Question currQuestion;
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
+
             questionTV = itemView.findViewById(R.id.questionRowQuestion);
             questionCV = itemView.findViewById(R.id.questionRowCardView);
             questionNumTV = itemView.findViewById(R.id.questionRowQuestionNum);
@@ -65,6 +69,7 @@ public class QuestionRVAdapter extends RecyclerView.Adapter<QuestionRVAdapter.My
             questionCV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Intent intent = new Intent(context, ModifyQuestionActivity.class);
                     Bundle questionInfo = new Bundle();
                     questionInfo.putString("quizId", String.valueOf(quizId));
@@ -74,8 +79,6 @@ public class QuestionRVAdapter extends RecyclerView.Adapter<QuestionRVAdapter.My
                     context.startActivity(intent);
                 }
             });
-
-
         }
     }
 }

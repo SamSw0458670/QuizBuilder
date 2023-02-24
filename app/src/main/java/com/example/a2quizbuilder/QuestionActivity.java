@@ -29,16 +29,15 @@ public class QuestionActivity extends AppCompatActivity {
 
     Button optOneBtn, optTwoBtn, optThreeBtn, optFourBtn, nextBtn, backBtn;
     ArrayList<String> options = new ArrayList<>();
-    ArrayList<Question> questionsO = new ArrayList<>();
+    ArrayList<Question> questions = new ArrayList<>();
 
     DBAdapter db;
 
-
     TextView questionTextView, qProgress, corNum;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
         intent = getIntent();
@@ -63,22 +62,19 @@ public class QuestionActivity extends AppCompatActivity {
         nextBtn.setOnClickListener(onOptionClicked);
         backBtn.setOnClickListener(onBackClicked);
 
-
         db = new DBAdapter(this);
 
-        //setup arraylists and hashmaps
         runSetup();
-        //fill header with proper data
         populateHeader();
-        //display the question and options for user to answer
         displayQAndOpts();
 
     }
 
+    //listener for the four option buttons
     public View.OnClickListener onOptionClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch(v.getId()){
+            switch (v.getId()) {
                 case R.id.optionOneBtn:
                     answerGiven(btnOne);
                     break;
@@ -107,87 +103,83 @@ public class QuestionActivity extends AppCompatActivity {
     };
 
     //function to determine if its the first question or not
-    public void runSetup(){
+    public void runSetup() {
+
         quizId = intent.getStringExtra("quizId");
         currentQuestion = intent.getIntExtra("currQ", 0);
-        if(currentQuestion > 0){
+        if (currentQuestion > 0) {
             getQuestions();
-        }
-        else{
+        } else {
             populateQuestions();
         }
         setNumQuestions();
     }//end runSetup
 
     //function to get data from bundle
-    public void getQuestions(){
+    public void getQuestions() {
 
-        questionsO = intent.getParcelableArrayListExtra("QOs");
+        questions = intent.getParcelableArrayListExtra("QOs");
         correct = intent.getIntExtra("correct", 0);
-
-    }//end of notFirstRun
-
-    //function to get ArrayList and hashmap data, and shuffle the questions
-    public void populateQuestions(){
-        populateQAndA();
-        shuffleQuestions();
-    }//end firstRunSetup
-
-    //function to fill the questions and answers array list
-    public void populateQAndA(){
-        db.open();
-        Cursor c = db.getAllQuestions(Integer.parseInt(quizId));
-        if(c.moveToFirst()){
-            do{
-                Question question = new Question(c.getString(0), c.getString(1), c.getString(2));
-                questionsO.add(question);
-            }while(c.moveToNext());
-        }
-        db.close();
-    }//end of populateQAndA
-
-    public void setNumQuestions(){
-        numQuestions = questionsO.size();
     }
 
+    //function to get ArrayList and hashmap data, and shuffle the questions
+    public void populateQuestions() {
 
+        populateQAndA();
+        shuffleQuestions();
+    }
+
+    //function to fill the questions and answers array list
+    public void populateQAndA() {
+
+        db.open();
+        Cursor c = db.getAllQuestions(Integer.parseInt(quizId));
+        if (c.moveToFirst()) {
+            do {
+                Question question = new Question(c.getString(0), c.getString(1), c.getString(2));
+                questions.add(question);
+            } while (c.moveToNext());
+        }
+        db.close();
+    }
+
+    //function to set the number of question from the questions array list size
+    public void setNumQuestions() {
+        numQuestions = questions.size();
+    }
 
     //function to randomize the order of the questions
-    public void shuffleQuestions(){
+    public void shuffleQuestions() {
         long seed = System.nanoTime();
-        Collections.shuffle(questionsO, new Random(seed));
-    }//end shuffleQuestions
-
-    //function to get the questions being currently displayed
-
-
+        Collections.shuffle(questions, new Random(seed));
+    }
 
     //function to get the options for the possible answers to the displayed question
     public void getOptionsO() {
 
         //create randomizer
         Random r = new Random();
-        int limit = questionsO.size() - 1;
+        int limit = questions.size() - 1;
 
         //create options
-        String optOne = questionsO.get(currentQuestion).getAnswer();
-        String optTwo = questionsO.get(r.nextInt(limit)).getAnswer();
-        String optThree = questionsO.get(r.nextInt(limit)).getAnswer();
-        String optFour = questionsO.get(r.nextInt(limit)).getAnswer();
+        String optOne = questions.get(currentQuestion).getAnswer();
+        String optTwo = questions.get(r.nextInt(limit)).getAnswer();
+        String optThree = questions.get(r.nextInt(limit)).getAnswer();
+        String optFour = questions.get(r.nextInt(limit)).getAnswer();
 
         //make sure option 2 is unique
-        while(optOne.equals(optTwo)){
-            optTwo = questionsO.get(r.nextInt(limit)).getAnswer();
+        while (optOne.equals(optTwo)) {
+            optTwo = questions.get(r.nextInt(limit)).getAnswer();
         }
 
         //make sure option 3 is unique
-        while(optThree.equals(optOne) || optThree.equals(optTwo)){
-            optThree = questionsO.get(r.nextInt(limit)).getAnswer();
+        while (optThree.equals(optOne) || optThree.equals(optTwo)) {
+            optThree = questions.get(r.nextInt(limit)).getAnswer();
         }
 
         //make sure option 4 is unique
-        while(optFour.equals(optOne) || optFour.equals(optTwo) || optFour.equals(optThree)){
-            optFour = questionsO.get(r.nextInt(limit)).getAnswer();
+        while (optFour.equals(optOne) || optFour.equals(optTwo) || optFour.equals(optThree)) {
+            optFour = questions.get(r.nextInt(limit)).getAnswer();
         }
 
         //add to options arraylist
@@ -198,10 +190,10 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to display the questions and options to the user
-    public void displayQAndOpts(){
+    public void displayQAndOpts() {
 
         //set question
-        String q = questionsO.get(currentQuestion).getQuestion();
+        String q = questions.get(currentQuestion).getQuestion();
         questionTextView.setText(q);
 
         //set options
@@ -212,65 +204,69 @@ public class QuestionActivity extends AppCompatActivity {
         optThreeBtn.setText(options.get(2));
         optFourBtn.setText(options.get(3));
 
-    }//end displayQAndOpts
+    }
 
     //function to randomize the order of the options, so that btn 1 is not always correct
-    public void shuffleOptions(){
+    public void shuffleOptions() {
+
         long seed = System.nanoTime();
         Collections.shuffle(options, new Random(seed));
-    }//end shuffleOptions
+    }
 
     //function to add correct numbers to the header
-    public void populateHeader(){
+    public void populateHeader() {
+
         populateQuestionProgress();
         populateCorrectNumber();
-    }//end of populateHeader
+    }
 
     //function to fill question fraction
-    public void populateQuestionProgress(){
-        String progress =" " + (currentQuestion + 1) + " / "
+    public void populateQuestionProgress() {
+
+        String progress = " " + (currentQuestion + 1) + " / "
                 + numQuestions;
         qProgress.setText(progress);
-    }//end of populateQuestionProgress
+    }
 
     //function to display number of questions answered correctly so far
-    public void populateCorrectNumber(){
+    public void populateCorrectNumber() {
+
         String cor = " " + correct;
         corNum.setText(cor);
-    }//end of populateCorrectNumber
+    }
 
     //function to check if answer given was correct
-    public void answerGiven(int btn){
-        if(btn == getCorrectBtn()){
+    public void answerGiven(int btn) {
+
+        if (btn == getCorrectBtn()) {
             correct++;
         }
         revealCorrectAnswer();
         revealNextBtn();
 
-    }//end of answerGiven
+    }
 
     //function to get the button the correct answer is on
-    public int getCorrectBtn(){
-        String correct = questionsO.get(currentQuestion).getAnswer();
-        if(correct.equals(String.valueOf(optOneBtn.getText()))){
+    public int getCorrectBtn() {
+
+        String correct = questions.get(currentQuestion).getAnswer();
+        if (correct.equals(String.valueOf(optOneBtn.getText()))) {
             return btnOne;
-        }
-        else if(correct.equals(String.valueOf(optTwoBtn.getText()))){
+        } else if (correct.equals(String.valueOf(optTwoBtn.getText()))) {
             return btnTwo;
-        }
-        else if(correct.equals(String.valueOf(optThreeBtn.getText()))){
+        } else if (correct.equals(String.valueOf(optThreeBtn.getText()))) {
             return btnThree;
-        }
-        else{
+        } else {
             return btnFour;
         }
-    }//end of getCorrectBtn
+    }
 
     //function to change color of buttons and disable them once user has given answer
-    public void revealCorrectAnswer(){
+    public void revealCorrectAnswer() {
+
         String incorrect = "red";
         String correct = "green";
-        switch(getCorrectBtn()){
+        switch (getCorrectBtn()) {
             case btnOne:
                 setColor(btnOne, correct);
                 setColor(btnTwo, incorrect);
@@ -296,13 +292,14 @@ public class QuestionActivity extends AppCompatActivity {
                 setColor(btnFour, correct);
                 break;
         }
-        disableButtons();
 
-    }//end of revealCorrectAnswer
+        disableButtons();
+    }
 
     //function to change incorrect buttons to red and correct to green
-    public void setColor(int btn, String color){
-        switch(btn){
+    public void setColor(int btn, String color) {
+
+        switch (btn) {
             case btnOne:
                 optOneBtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(color)));
                 break;
@@ -316,19 +313,21 @@ public class QuestionActivity extends AppCompatActivity {
                 optFourBtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(color)));
                 break;
         }
-    }//end of setColor
+    }
 
     //function to disable option buttons
-    public void disableButtons(){
+    public void disableButtons() {
+
         optOneBtn.setClickable(false);
         optTwoBtn.setClickable(false);
         optThreeBtn.setClickable(false);
         optFourBtn.setClickable(false);
-    }//end of disableButtons
+    }
 
     //function to display the next question button
-    public void revealNextBtn(){
-        if((currentQuestion + 1) == numQuestions) {
+    public void revealNextBtn() {
+
+        if ((currentQuestion + 1) == numQuestions) {
             String fin = "Finish";
             nextBtn.setText(fin);
         }
@@ -336,10 +335,10 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to take user to the next question
-    public void nextQuestion(){
+    public void nextQuestion() {
 
         //go to end screen if on last question
-        if((currentQuestion + 1) == numQuestions){
+        if ((currentQuestion + 1) == numQuestions) {
             Intent i = new Intent(getApplicationContext(), EndActivity.class);
             Bundle finals = new Bundle();
             finals.putInt("correct", correct);
@@ -356,10 +355,9 @@ public class QuestionActivity extends AppCompatActivity {
             extras.putInt("correct", correct);
             extras.putInt("currQ", currentQuestion);
             extras.putString("quizId", quizId);
-            extras.putParcelableArrayList("QOs", questionsO);
+            extras.putParcelableArrayList("QOs", questions);
             i.putExtras(extras);
             startActivity(i);
         }
-    }//end of nextQuestion
-
+    }
 }

@@ -32,6 +32,7 @@ public class ViewQuizzesActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_quizzes);
 
@@ -44,12 +45,12 @@ public class ViewQuizzesActivity extends AppCompatActivity {
 
         db = new DBAdapter(this);
         displayQuizzes();
-
     }
 
     public View.OnClickListener onBackClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
             Intent intent = new Intent(ViewQuizzesActivity.this, MainActivity.class);
 
             startActivity(intent);
@@ -59,6 +60,7 @@ public class ViewQuizzesActivity extends AppCompatActivity {
     public View.OnClickListener onNewClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
             Intent intent = new Intent(ViewQuizzesActivity.this, ModifyQuizActivity.class);
             Bundle mode = new Bundle();
             mode.putBoolean("editing", false);
@@ -67,7 +69,9 @@ public class ViewQuizzesActivity extends AppCompatActivity {
         }
     };
 
+    //function to load the quizzes from the database into the array list
     public void loadQuizzes(){
+
         db.open();
         Cursor c = db.getAllQuizzes();
         if(c.moveToFirst()){
@@ -79,7 +83,9 @@ public class ViewQuizzesActivity extends AppCompatActivity {
         db.close();
     }
 
+    //function to display the quizzes from the array list in the recycler view
     public void displayQuizzes(){
+
         loadQuizzes();
         recyclerAdapter = new QuizRVAdapter(this, quizList);
 
