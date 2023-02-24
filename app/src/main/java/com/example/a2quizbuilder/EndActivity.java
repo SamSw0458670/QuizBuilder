@@ -10,21 +10,29 @@ import android.widget.TextView;
 
 public class EndActivity extends AppCompatActivity {
 
-    Button backToM;
+    Button backToM, retryBtn;
     int numCorrect, numQuestions;
 
     TextView scoreValue, message;
+
+    Bundle quizInfo;
+    Intent quizIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end);
 
+        quizIntent = getIntent();
+        quizInfo = quizIntent.getExtras();
+
         backToM = findViewById(R.id.backToMenuBtn);
+        retryBtn = findViewById(R.id.endRetryBtn);
         scoreValue = findViewById(R.id.scoreValueTextView);
         message = findViewById(R.id.messageTextView);
 
         backToM.setOnClickListener(onMenuClicked);
+        retryBtn.setOnClickListener(onRetryClicked);
 
         getScore();
         setMessage();
@@ -41,12 +49,23 @@ public class EndActivity extends AppCompatActivity {
         }
     };
 
+    public View.OnClickListener onRetryClicked = new View.OnClickListener(){
+
+        @Override
+        public void onClick(View v) {
+            String quizId = quizInfo.getString("quizId");
+            Intent i = new Intent(getApplicationContext(), QuestionActivity.class);
+            Bundle id = new Bundle();
+            id.putString("quizId", quizId);
+            i.putExtras(id);
+            startActivity(i);
+        }
+    };
+
     //function to get the number of correct answers and total questions from the bundle
     public void getScore(){
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        numCorrect = extras.getInt("correct");
-        numQuestions = extras.getInt("totalQs");
+        numCorrect = quizInfo.getInt("correct");
+        numQuestions = quizInfo.getInt("totalQs");
     }//end getScore
 
     //function to determine and set which message top display based on the users score

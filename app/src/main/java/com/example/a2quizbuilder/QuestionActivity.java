@@ -344,6 +344,7 @@ public class QuestionActivity extends AppCompatActivity {
             Bundle finals = new Bundle();
             finals.putInt("correct", correct);
             finals.putInt("totalQs", numQuestions);
+            finals.putString("quizId", quizId);
             i.putExtras(finals);
             startActivity(i);
         }
@@ -354,7 +355,7 @@ public class QuestionActivity extends AppCompatActivity {
             Bundle extras = new Bundle();
             extras.putInt("correct", correct);
             extras.putInt("currQ", currentQuestion);
-            //extras.putSerializable("QOs", questionsO);
+            extras.putString("quizId", quizId);
             extras.putParcelableArrayList("QOs", questionsO);
             i.putExtras(extras);
             startActivity(i);
