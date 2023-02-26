@@ -11,7 +11,7 @@ public class Quiz {
     public Quiz(String pId, String pName, String pSeconds) {
         this.m_id = pId;
         this.m_name = pName;
-        this.m_secondsPerQuestion = Integer.parseInt(pSeconds);
+        this.m_secondsPerQuestion = Integer.parseInt(pSeconds) * 1000;
     }
 
     //getters
@@ -23,7 +23,7 @@ public class Quiz {
         return this.m_name;
     }
 
-    public String getSeconds() {
-        return String.valueOf(this.m_secondsPerQuestion);
+    public long getSeconds() {
+        return this.m_secondsPerQuestion;
     }
 }

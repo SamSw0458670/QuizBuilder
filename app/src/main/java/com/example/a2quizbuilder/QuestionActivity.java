@@ -119,8 +119,8 @@ public class QuestionActivity extends AppCompatActivity {
             getInfo();
         } else {
             populateQuestions();
-            populateTimer();
         }
+        populateTimer();
         setNumQuestions();
     }
 
@@ -129,7 +129,6 @@ public class QuestionActivity extends AppCompatActivity {
 
         questions = intent.getParcelableArrayListExtra("QOs");
         correct = intent.getIntExtra("correct", 0);
-        timerAmount = intent.getLongExtra("timerAmt", 10000);
     }
 
     //function to get ArrayList and hashmap data, and shuffle the questions
@@ -161,13 +160,8 @@ public class QuestionActivity extends AppCompatActivity {
 
     //function to get the timer amount from the database
     private void populateTimer(){
-        db.open();
-        Cursor c = db.getSingleQuiz(Integer.parseInt(quizId));
-
-        if (c.moveToFirst()) {
-            timerAmount = (long) c.getInt(1) * 1000;
-        }
-        db.close();
+        timerAmount = intent.getLongExtra("timerAmt", 10000);
+        timerLeft = timerAmount;
     }
 
     //function to randomize the order of the questions

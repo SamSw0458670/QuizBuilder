@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     String quizId;
     final String noQuizSelected = "X";
+    long seconds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Intent i = new Intent(getApplicationContext(), QuestionActivity.class);
                 Bundle quizInfo = new Bundle();
                 quizInfo.putString("quizId", quizId);
+                quizInfo.putLong("timerAmt", seconds);
                 i.putExtras(quizInfo);
                 startActivity(i);
             }
@@ -159,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             quizId = noQuizSelected;
         } else {
             quizId = quizList.get(position - 1).getID();
+            seconds = quizList.get(position - 1).getSeconds();
         }
         ((TextView) parent.getChildAt(0)).setTextColor(Color.BLACK);
         ((TextView) parent.getChildAt(0)).setTextSize(20);
