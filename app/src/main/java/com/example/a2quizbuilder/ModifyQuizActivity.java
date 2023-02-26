@@ -56,35 +56,35 @@ public class ModifyQuizActivity extends AppCompatActivity {
         populateInfo();
     }
 
-    public View.OnClickListener onBackClicked = new View.OnClickListener() {
+    private View.OnClickListener onBackClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             goToPreviousActivity();
         }
     };
 
-    public View.OnClickListener onDeleteClicked = new View.OnClickListener() {
+    private View.OnClickListener onDeleteClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             deleteQuiz();
         }
     };
 
-    public View.OnClickListener onPlusClicked = new View.OnClickListener() {
+    private View.OnClickListener onPlusClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             increaseSeconds();
         }
     };
 
-    public View.OnClickListener onMinusClicked = new View.OnClickListener() {
+    private View.OnClickListener onMinusClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             decreaseSeconds();
         }
     };
 
-    public View.OnClickListener onSaveClicked = new View.OnClickListener() {
+    private View.OnClickListener onSaveClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             saveChanges();

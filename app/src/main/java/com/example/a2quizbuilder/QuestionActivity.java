@@ -77,7 +77,7 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //listener for the four option buttons
-    public View.OnClickListener onOptionClicked = new View.OnClickListener() {
+    private View.OnClickListener onOptionClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
@@ -101,7 +101,7 @@ public class QuestionActivity extends AppCompatActivity {
         }
     };
 
-    public View.OnClickListener onBackClicked = new View.OnClickListener() {
+    private View.OnClickListener onBackClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(QuestionActivity.this, MainActivity.class);
@@ -110,7 +110,7 @@ public class QuestionActivity extends AppCompatActivity {
     };
 
     //function to determine if its the first question or not
-    public void runSetup() {
+    private void runSetup() {
 
         quizId = intent.getStringExtra("quizId");
         currentQuestion = intent.getIntExtra("currQ", 0);
@@ -125,7 +125,7 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to get data from the bundle from the previous question
-    public void getInfo() {
+    private void getInfo() {
 
         questions = intent.getParcelableArrayListExtra("QOs");
         correct = intent.getIntExtra("correct", 0);
@@ -133,14 +133,14 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to get ArrayList and hashmap data, and shuffle the questions
-    public void populateQuestions() {
+    private void populateQuestions() {
 
         populateQAndA();
         shuffleQuestions();
     }
 
     //function to fill the questions and answers array list
-    public void populateQAndA() {
+    private void populateQAndA() {
 
         db.open();
         Cursor c = db.getAllQuestions(Integer.parseInt(quizId));
@@ -155,12 +155,12 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to set the number of question from the questions array list size
-    public void setNumQuestions() {
+    private void setNumQuestions() {
         numQuestions = questions.size();
     }
 
     //function to get the timer amount from the database
-    public void populateTimer(){
+    private void populateTimer(){
         db.open();
         Cursor c = db.getSingleQuiz(Integer.parseInt(quizId));
 
@@ -171,13 +171,13 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to randomize the order of the questions
-    public void shuffleQuestions() {
+    private void shuffleQuestions() {
         long seed = System.nanoTime();
         Collections.shuffle(questions, new Random(seed));
     }
 
     //function to get the options for the possible answers to the displayed question
-    public void getOptionsO() {
+    private void getOptionsO() {
 
         //create randomizer
         Random r = new Random();
@@ -212,7 +212,7 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to display the questions and options to the user
-    public void displayQAndOpts() {
+    private void displayQAndOpts() {
 
         //set question
         String q = questions.get(currentQuestion).getQuestion();
@@ -229,21 +229,21 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to randomize the order of the options, so that btn 1 is not always correct
-    public void shuffleOptions() {
+    private void shuffleOptions() {
 
         long seed = System.nanoTime();
         Collections.shuffle(options, new Random(seed));
     }
 
     //function to add correct numbers to the header
-    public void populateHeader() {
+    private void populateHeader() {
 
         populateQuestionProgress();
         populateCorrectNumber();
     }
 
     //function to fill question fraction
-    public void populateQuestionProgress() {
+    private void populateQuestionProgress() {
 
         String progress = " " + (currentQuestion + 1) + " / "
                 + numQuestions;
@@ -251,14 +251,14 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to display number of questions answered correctly so far
-    public void populateCorrectNumber() {
+    private void populateCorrectNumber() {
 
         String cor = " " + correct;
         corNum.setText(cor);
     }
 
     //function to check if answer given was correct
-    public void answerGiven(int btn) {
+    private void answerGiven(int btn) {
 
         if (btn == getCorrectBtn()) {
             correct++;
@@ -270,7 +270,7 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to get the button the correct answer is on
-    public int getCorrectBtn() {
+    private int getCorrectBtn() {
 
         String correct = questions.get(currentQuestion).getAnswer();
 
@@ -286,7 +286,7 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to change color of buttons and disable them once user has given answer
-    public void revealCorrectAnswer() {
+    private void revealCorrectAnswer() {
 
         String incorrect = "red";
         String correct = "green";
@@ -322,7 +322,7 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to change incorrect buttons to red and correct to green
-    public void setColor(int btn, String color) {
+    private void setColor(int btn, String color) {
 
         switch (btn) {
             case btnOne:
@@ -341,7 +341,7 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to disable option buttons
-    public void disableButtons() {
+    private void disableButtons() {
 
         optOneBtn.setClickable(false);
         optTwoBtn.setClickable(false);
@@ -350,7 +350,7 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to display the next question button
-    public void revealNextBtn() {
+    private void revealNextBtn() {
 
         if ((currentQuestion + 1) == numQuestions) {
             String fin = "Finish";
@@ -360,7 +360,7 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to take user to the next question
-    public void nextQuestion() {
+    private void nextQuestion() {
 
         //go to end screen if on last question
         if ((currentQuestion + 1) == numQuestions) {
@@ -388,7 +388,7 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     //function to create and start a timer
-    public void startTimer(){
+    private void startTimer(){
         timer = new CountDownTimer(timerAmount, 500) {
             @Override
             public void onTick(long millisUntilFinished) {

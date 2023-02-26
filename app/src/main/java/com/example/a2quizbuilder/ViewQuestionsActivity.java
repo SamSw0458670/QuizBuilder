@@ -28,8 +28,6 @@ public class ViewQuestionsActivity extends AppCompatActivity {
 
     private RecyclerView.Adapter recyclerAdapter;
 
-    private RecyclerView.LayoutManager layoutManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -53,7 +51,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
         displayQuestions();
     }
 
-    public View.OnClickListener onBackClicked = new View.OnClickListener() {
+    private View.OnClickListener onBackClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
@@ -62,7 +60,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
         }
     };
 
-    public View.OnClickListener onNewClicked = new View.OnClickListener() {
+    private View.OnClickListener onNewClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
@@ -73,7 +71,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
         }
     };
 
-    public View.OnClickListener onQuizPropsClicked = new View.OnClickListener() {
+    private View.OnClickListener onQuizPropsClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
@@ -85,13 +83,13 @@ public class ViewQuestionsActivity extends AppCompatActivity {
     };
 
     //function to get the quiz id
-    public void fillQuizId() {
+    private void fillQuizId() {
 
         quizId = Long.parseLong(quizInfo.getString("quizId"));
     }
 
     //function to load the questions from database into the array list
-    public void loadQuestions() {
+    private void loadQuestions() {
 
         fillQuizId();
         db.open();
@@ -106,7 +104,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
     }
 
     //function to display the question array list in the recycler view
-    public void displayQuestions() {
+    private void displayQuestions() {
 
         loadQuestions();
         recyclerAdapter = new QuestionRVAdapter(this, questionList, quizId);

@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    public void CopyDB(InputStream inputStream, OutputStream outputStream)
+    private void CopyDB(InputStream inputStream, OutputStream outputStream)
             throws IOException {
 
         //copy 1k bytes at a time
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         outputStream.close();
     }
 
-    public View.OnClickListener onStartClicked = new View.OnClickListener() {
+    private View.OnClickListener onStartClicked = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     };
 
-    public View.OnClickListener onViewQuizzesClicked = new View.OnClickListener() {
+    private View.OnClickListener onViewQuizzesClicked = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     //function to load all the quizzes from the quiz list into the spinner
-    public void loadSpinner() {
+    private void loadSpinner() {
 
         loadQuizzes();
         List<String> spinList = new ArrayList<>();
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     //function to fill the quiz array list with quizzes from the database
-    public void loadQuizzes() {
+    private void loadQuizzes() {
 
         db.open();
         Cursor c = db.getAllQuizzes();
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         db.close();
     }
 
-    public void startQuiz(){
+    private void startQuiz(){
         if(validateSpinner()){
             if (validateQuiz()) {
                 Intent i = new Intent(getApplicationContext(), QuestionActivity.class);

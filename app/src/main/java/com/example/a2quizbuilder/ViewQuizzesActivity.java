@@ -26,10 +26,6 @@ public class ViewQuizzesActivity extends AppCompatActivity {
 
     private RecyclerView.Adapter recyclerAdapter;
 
-    private RecyclerView.LayoutManager layoutManager;
-
-    Resources res;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -47,7 +43,7 @@ public class ViewQuizzesActivity extends AppCompatActivity {
         displayQuizzes();
     }
 
-    public View.OnClickListener onBackClicked = new View.OnClickListener() {
+    private View.OnClickListener onBackClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
@@ -57,7 +53,7 @@ public class ViewQuizzesActivity extends AppCompatActivity {
         }
     };
 
-    public View.OnClickListener onNewClicked = new View.OnClickListener() {
+    private View.OnClickListener onNewClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
@@ -70,7 +66,7 @@ public class ViewQuizzesActivity extends AppCompatActivity {
     };
 
     //function to load the quizzes from the database into the array list
-    public void loadQuizzes(){
+    private void loadQuizzes(){
 
         db.open();
         Cursor c = db.getAllQuizzes();
@@ -84,7 +80,7 @@ public class ViewQuizzesActivity extends AppCompatActivity {
     }
 
     //function to display the quizzes from the array list in the recycler view
-    public void displayQuizzes(){
+    private void displayQuizzes(){
 
         loadQuizzes();
         recyclerAdapter = new QuizRVAdapter(this, quizList);

@@ -53,21 +53,21 @@ public class ModifyQuestionActivity extends AppCompatActivity {
         populateInfo();
     }
 
-    public View.OnClickListener onBackClicked = new View.OnClickListener() {
+    private View.OnClickListener onBackClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             goToViewQuestions();
         }
     };
 
-    public View.OnClickListener onDeleteClicked = new View.OnClickListener() {
+    private View.OnClickListener onDeleteClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             deleteQuestion();
         }
     };
 
-    public View.OnClickListener onSaveClicked = new View.OnClickListener() {
+    private View.OnClickListener onSaveClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             saveChanges();

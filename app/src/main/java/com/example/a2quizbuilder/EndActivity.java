@@ -41,7 +41,7 @@ public class EndActivity extends AppCompatActivity {
 
     }
 
-    public View.OnClickListener onMenuClicked = new View.OnClickListener() {
+    private final View.OnClickListener onMenuClicked = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
@@ -51,7 +51,7 @@ public class EndActivity extends AppCompatActivity {
         }
     };
 
-    public View.OnClickListener onRetryClicked = new View.OnClickListener() {
+    private final View.OnClickListener onRetryClicked = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
@@ -66,14 +66,14 @@ public class EndActivity extends AppCompatActivity {
     };
 
     //function to get the number of correct answers and total questions from the bundle
-    public void getScore() {
+    private void getScore() {
 
         numCorrect = quizInfo.getInt("correct");
         numQuestions = quizInfo.getInt("totalQs");
     }
 
     //function to determine and set which message top display based on the users score
-    public void setMessage() {
+    private void setMessage() {
 
         double percentage = numCorrect * 100 / numQuestions;
         String msg;
@@ -90,7 +90,7 @@ public class EndActivity extends AppCompatActivity {
     }
 
     //function to populate the score onto the screen
-    public void setScore() {
+    private void setScore() {
 
         String score = numCorrect + " / " + numQuestions;
         scoreValue.setText(score);
