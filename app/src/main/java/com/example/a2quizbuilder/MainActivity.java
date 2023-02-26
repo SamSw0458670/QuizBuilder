@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     List<Quiz> quizList = new ArrayList<>();
 
     String quizId;
+    final String noQuizSelected = "X";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,13 +90,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public void onClick(View v) {
-            if (validateQuiz()) {
-                Intent i = new Intent(getApplicationContext(), QuestionActivity.class);
-                Bundle quizInfo = new Bundle();
-                quizInfo.putString("quizId", quizId);
-                i.putExtras(quizInfo);
-                startActivity(i); //Go to the first question of the quiz
-            }
+            startQuiz();
         }
     };
 
@@ -115,9 +111,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         List<String> spinList = new ArrayList<>();
         int spinItem = androidx.appcompat.R.layout.support_simple_spinner_dropdown_item;
 
+        spinList.add("Select Quiz...");
         for (int i = 0; i < quizList.size(); i++) {
             spinList.add(quizList.get(i).getM_name());
         }
+
 
         ArrayAdapter<String> spinAdapter = new ArrayAdapter<String>(this, spinItem, spinList);
 
@@ -141,13 +139,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         db.close();
     }
 
+    public void startQuiz(){
+        if(validateSpinner()){
+            if (validateQuiz()) {
+                Intent i = new Intent(getApplicationContext(), QuestionActivity.class);
+                Bundle quizInfo = new Bundle();
+                quizInfo.putString("quizId", quizId);
+                i.putExtras(quizInfo);
+                startActivity(i);
+            }
+        }
+    }
+
     //function to change quiz id to the selected quiz's id in the spinner
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position,
                                long id) {
-
-        quizId = quizList.get(position).getID();
+        if(position == 0){
+            quizId = noQuizSelected;
+        } else {
+            quizId = quizList.get(position - 1).getID();
+        }
         ((TextView) parent.getChildAt(0)).setTextColor(Color.BLACK);
+        ((TextView) parent.getChildAt(0)).setTextSize(20);
     }
 
     //override function necessary for spinner
@@ -171,4 +185,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         db.close();
         return result;
     }
+
+    private boolean validateSpinner(){
+
+        if(Objects.equals(quizId, noQuizSelected)){
+            Toast.makeText(MainActivity.this,
+                    "Please select a quiz",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
 }
