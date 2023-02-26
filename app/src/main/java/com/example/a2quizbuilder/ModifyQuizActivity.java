@@ -23,7 +23,7 @@ public class ModifyQuizActivity extends AppCompatActivity {
     EditText quizNameET;
 
     String quizId, quizName, quizSeconds;
-    String defaultId = "-1", defaultQuizName = "Enter Quiz Name", defaultSeconds = "10";
+    String defaultId = "-1", defaultQuizName = "", defaultSeconds = "10";
 
     boolean editing = true;
 

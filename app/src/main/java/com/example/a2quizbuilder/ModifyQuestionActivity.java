@@ -26,7 +26,7 @@ public class ModifyQuestionActivity extends AppCompatActivity {
     boolean editing = true;
 
     String question, answer, questionId, quizId;
-    String defaultQuestion = "Enter Question", defaultAnswer = "Enter Answer", defaultId = "-1";
+    String defaultQuestion = "", defaultAnswer = "", defaultId = "-1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

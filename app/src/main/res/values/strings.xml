@@ -35,6 +35,9 @@
     <string name="newQuiz">New Quiz</string>
     <string name="questionNumber">Question #</string>
     <string name="viewQuizzes">View Quizzes</string>
+    <string name="enterQuestion">Enter Question</string>
+    <string name="enterAnswer">Enter Answer</string>
+    <string name="enterQuizName">Enter Quiz Name</string>
 
     <string-array name="forSpinner">
         <item>Select Quiz</item>
