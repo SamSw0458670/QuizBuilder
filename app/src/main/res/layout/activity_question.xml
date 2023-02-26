@@ -75,6 +75,23 @@
         </TableRow>
 
         <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/timerTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_span="5"
+                android:layout_weight="1"
+                android:text="@string/number"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="34sp" />
+        </TableRow>
+
+        <TableRow
             android:id="@+id/questionRow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

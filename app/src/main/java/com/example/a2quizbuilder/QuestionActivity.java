@@ -7,6 +7,7 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -33,17 +34,22 @@ public class QuestionActivity extends AppCompatActivity {
 
     DBAdapter db;
 
-    TextView questionTextView, qProgress, corNum;
+    TextView questionTextView, qProgress, corNum, timerTV;
+
+    CountDownTimer timer;
+    boolean timerRunning;
+    long timerLeft;
+    long timerAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
+
         intent = getIntent();
         quizInfo = intent.getExtras();
 
-        //assign ids
         optOneBtn = findViewById(R.id.optionOneBtn);
         optTwoBtn = findViewById(R.id.optionTwoBtn);
         optThreeBtn = findViewById(R.id.optionThreeBtn);
@@ -53,8 +59,8 @@ public class QuestionActivity extends AppCompatActivity {
         qProgress = findViewById(R.id.qFractionTextView);
         corNum = findViewById(R.id.correctValueTextView);
         backBtn = findViewById(R.id.questionBackBtn);
+        timerTV = findViewById(R.id.timerTV);
 
-        //set Listeners
         optOneBtn.setOnClickListener(onOptionClicked);
         optTwoBtn.setOnClickListener(onOptionClicked);
         optThreeBtn.setOnClickListener(onOptionClicked);
@@ -67,13 +73,14 @@ public class QuestionActivity extends AppCompatActivity {
         runSetup();
         populateHeader();
         displayQAndOpts();
-
+        startTimer();
     }
 
     //listener for the four option buttons
     public View.OnClickListener onOptionClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
             switch (v.getId()) {
                 case R.id.optionOneBtn:
                     answerGiven(btnOne);
@@ -107,19 +114,22 @@ public class QuestionActivity extends AppCompatActivity {
 
         quizId = intent.getStringExtra("quizId");
         currentQuestion = intent.getIntExtra("currQ", 0);
+
         if (currentQuestion > 0) {
-            getQuestions();
+            getInfo();
         } else {
             populateQuestions();
+            populateTimer();
         }
         setNumQuestions();
-    }//end runSetup
+    }
 
-    //function to get data from bundle
-    public void getQuestions() {
+    //function to get data from the bundle from the previous question
+    public void getInfo() {
 
         questions = intent.getParcelableArrayListExtra("QOs");
         correct = intent.getIntExtra("correct", 0);
+        timerAmount = intent.getLongExtra("timerAmt", 10000);
     }
 
     //function to get ArrayList and hashmap data, and shuffle the questions
@@ -134,6 +144,7 @@ public class QuestionActivity extends AppCompatActivity {
 
         db.open();
         Cursor c = db.getAllQuestions(Integer.parseInt(quizId));
+
         if (c.moveToFirst()) {
             do {
                 Question question = new Question(c.getString(0), c.getString(1), c.getString(2));
@@ -146,6 +157,17 @@ public class QuestionActivity extends AppCompatActivity {
     //function to set the number of question from the questions array list size
     public void setNumQuestions() {
         numQuestions = questions.size();
+    }
+
+    //function to get the timer amount from the database
+    public void populateTimer(){
+        db.open();
+        Cursor c = db.getSingleQuiz(Integer.parseInt(quizId));
+
+        if (c.moveToFirst()) {
+            timerAmount = (long) c.getInt(1) * 1000;
+        }
+        db.close();
     }
 
     //function to randomize the order of the questions
@@ -241,6 +263,7 @@ public class QuestionActivity extends AppCompatActivity {
         if (btn == getCorrectBtn()) {
             correct++;
         }
+        stopTimer();
         revealCorrectAnswer();
         revealNextBtn();
 
@@ -250,6 +273,7 @@ public class QuestionActivity extends AppCompatActivity {
     public int getCorrectBtn() {
 
         String correct = questions.get(currentQuestion).getAnswer();
+
         if (correct.equals(String.valueOf(optOneBtn.getText()))) {
             return btnOne;
         } else if (correct.equals(String.valueOf(optTwoBtn.getText()))) {
@@ -266,6 +290,7 @@ public class QuestionActivity extends AppCompatActivity {
 
         String incorrect = "red";
         String correct = "green";
+
         switch (getCorrectBtn()) {
             case btnOne:
                 setColor(btnOne, correct);
@@ -356,8 +381,46 @@ public class QuestionActivity extends AppCompatActivity {
             extras.putInt("currQ", currentQuestion);
             extras.putString("quizId", quizId);
             extras.putParcelableArrayList("QOs", questions);
+            extras.putLong("timerAmt", timerAmount);
             i.putExtras(extras);
             startActivity(i);
         }
+    }
+
+    //function to create and start a timer
+    public void startTimer(){
+        timer = new CountDownTimer(timerAmount, 500) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timerLeft = millisUntilFinished;
+                updateTimerDisplay();
+            }
+
+            @Override
+            public void onFinish() {
+                timerRunning = false;
+
+                //5 is not an existing button so it will always be incorrect
+                answerGiven(5);
+                timerTV.setText("0");
+            }
+        }.start();
+        timerRunning = true;
+    }
+
+    //function to stop the timer
+    private void stopTimer() {
+        if(timerRunning){
+            timer.cancel();
+        }
+        timerRunning = false;
+        updateTimerDisplay();
+    }
+
+    //function to update the timer display in the UI
+    private void updateTimerDisplay(){
+
+        int seconds = (int) (timerLeft / 1000) + 1;
+        timerTV.setText(String.valueOf(seconds));
     }
 }
