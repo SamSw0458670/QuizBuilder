@@ -12,6 +12,7 @@ public class EndActivity extends AppCompatActivity {
 
     Button MenuBtn, retryBtn;
     int numCorrect, numQuestions;
+    long seconds;
 
     TextView scoreValue, message;
 
@@ -58,9 +59,10 @@ public class EndActivity extends AppCompatActivity {
 
             String quizId = quizInfo.getString("quizId");
             Intent i = new Intent(getApplicationContext(), QuestionActivity.class);
-            Bundle id = new Bundle();
-            id.putString("quizId", quizId);
-            i.putExtras(id);
+            Bundle info = new Bundle();
+            info.putString("quizId", quizId);
+            info.putLong("timerAmt", seconds);
+            i.putExtras(info);
             startActivity(i);
         }
     };
@@ -70,6 +72,7 @@ public class EndActivity extends AppCompatActivity {
 
         numCorrect = quizInfo.getInt("correct");
         numQuestions = quizInfo.getInt("totalQs");
+        seconds = quizInfo.getLong("timerAmt");
     }
 
     //function to determine and set which message top display based on the users score

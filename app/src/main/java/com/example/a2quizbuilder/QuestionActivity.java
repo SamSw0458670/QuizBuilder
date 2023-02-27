@@ -357,6 +357,7 @@ public class QuestionActivity extends AppCompatActivity {
             finals.putInt("correct", correct);
             finals.putInt("totalQs", numQuestions);
             finals.putString("quizId", quizId);
+            finals.putLong("timerAmt", timerAmount);
             i.putExtras(finals);
             startActivity(i);
         }
