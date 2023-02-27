@@ -4,6 +4,7 @@ import static android.view.View.VISIBLE;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -282,56 +284,48 @@ public class QuestionActivity extends AppCompatActivity {
     //function to change color of buttons and disable them once user has given answer
     private void revealCorrectAnswer() {
 
-        String incorrect = "red";
-        String correct = "green";
-
         switch (getCorrectBtn()) {
             case btnOne:
-                setColor(btnOne, correct);
-                setColor(btnTwo, incorrect);
-                setColor(btnThree, incorrect);
-                setColor(btnFour, incorrect);
+                correctColors(optOneBtn);
+                incorrectColors(optTwoBtn);
+                incorrectColors(optThreeBtn);
+                incorrectColors(optFourBtn);
                 break;
             case btnTwo:
-                setColor(btnOne, incorrect);
-                setColor(btnTwo, correct);
-                setColor(btnThree, incorrect);
-                setColor(btnFour, incorrect);
+                incorrectColors(optOneBtn);
+                correctColors(optTwoBtn);
+                incorrectColors(optThreeBtn);
+                incorrectColors(optFourBtn);
                 break;
             case btnThree:
-                setColor(btnOne, incorrect);
-                setColor(btnTwo, incorrect);
-                setColor(btnThree, correct);
-                setColor(btnFour, incorrect);
+                incorrectColors(optOneBtn);
+                incorrectColors(optTwoBtn);
+                correctColors(optThreeBtn);
+                incorrectColors(optFourBtn);
                 break;
             case btnFour:
-                setColor(btnOne, incorrect);
-                setColor(btnTwo, incorrect);
-                setColor(btnThree, incorrect);
-                setColor(btnFour, correct);
+                incorrectColors(optOneBtn);
+                incorrectColors(optTwoBtn);
+                incorrectColors(optThreeBtn);
+                correctColors(optFourBtn);
                 break;
         }
 
         disableButtons();
     }
 
-    //function to change incorrect buttons to red and correct to green
-    private void setColor(int btn, String color) {
+    //function to set a button to the incorrect color scheme
+    private void incorrectColors(Button btn){
+        btn.setBackgroundTintList(ColorStateList.valueOf(
+                ContextCompat.getColor(this, R.color.incorrectAns)));
 
-        switch (btn) {
-            case btnOne:
-                optOneBtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(color)));
-                break;
-            case btnTwo:
-                optTwoBtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(color)));
-                break;
-            case btnThree:
-                optThreeBtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(color)));
-                break;
-            case btnFour:
-                optFourBtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(color)));
-                break;
-        }
+    }
+
+    //function to set a button to the correct color scheme
+    private void correctColors(Button btn){
+        btn.setBackgroundTintList(ColorStateList.valueOf(
+                ContextCompat.getColor(this, R.color.correctAns)));
+        btn.setTextColor(ContextCompat.getColor(this, R.color.black));
     }
 
     //function to disable option buttons
